@@ -14,6 +14,7 @@ rgb_color colors[LED_COUNT];
 #define NB_SECTOR       36
 
 #define CONVERT_us_PAR_SECTOR(v)    (unsigned long) ((float) (TEMPS_COMPTAGE * 1000.0f) / (float) (v * NB_SECTOR))
+#define CONVERT_TR_PAR_MIN(v)       (float) ((float) v * 1000.0f * 60.0f / TEMPS_COMPTAGE)
 
 volatile unsigned char  Count;
 unsigned char   MemoCount;
@@ -47,6 +48,11 @@ void Calcul_Time_By_Sector()
 {
     NbTours = (Count - MemoCount);
 
+    // Optionnel affiche la vitesse en Tr/min
+    Serial.print("Speed: ");
+    Serial.print(CONVERT_TR_PAR_MIN(NbTours));
+    Serial.println("Tr/min \n");
+    
     Time_By_Sector = CONVERT_us_PAR_SECTOR(NbTours);
     
     MemoCount = Count;
