@@ -74,19 +74,18 @@ void loop()
     unsigned int i;
     rgb_color color;
           
-    if ((millis() - Count_ms) > TEMPS_COMPTAGE)
+    /*!if ((millis() - Count_ms) > TEMPS_COMPTAGE)
     {
         Count_ms = millis();
 
         Calcul_Time_By_Sector();
-    }
+    }*/
 
-    if ((unsigned long) (micros() - Count_us) > Time_By_Sector)
+    if (MemoCount != Count)
     {
-        Count_us = micros();
-
+        MemoCount = Count;
         i = Count % 2;
-
+    
         switch (i)
         {
             case 0:
@@ -101,93 +100,16 @@ void loop()
                 color.red = 0;
                 color.green = 0;
                 color.blue = 0;
-             }
-            break;
-            case 2:
-            {
-                color.red = 255;
-                color.green = 127;
-                color.blue = 0;
-            }
-            break;
-            case 3:
-            {
-                color.red = 255;
-                color.green = 255;
-                color.blue = 0;
-            }
-            break;
-            case 4:
-            {
-                color.red = 127;
-                color.green = 255;
-                color.blue = 0;
-            }
-            break;
-            case 5:
-            {
-                color.red = 0;
-                color.green = 255;
-                color.blue = 0;
-            }
-            break;
-            case 6:
-            {
-                color.red = 0;
-                color.green = 255;
-                color.blue = 127;
-            }
-            break;
-            case 7:
-            {
-                color.red = 0;
-                color.green = 255;
-                color.blue = 255;
-            }
-            break;
-            case 8:
-            {
-                color.red = 0;
-                color.green = 127;
-                color.blue = 255;
-            }
-            break;
-            case 9:
-            {
-                color.red = 0;
-                color.green = 0;
-                color.blue = 255;
-            }
-            break;
-            case 10:
-            {
-                color.red = 127;
-                color.green = 0;
-                color.blue = 255;
-            }
-            break;
-            case 11:
-            {
-                color.red = 255;
-                color.green = 0;
-                color.blue = 255;
-            }
-            break;
-            case 12:
-            {
-                color.red = 255;
-                color.green = 0;
-                color.blue = 127;
             }
             break;
         }
-
+            
         // Update the colors buffer.
         for(i = 0; i < LED_COUNT; i++)
         {
             colors[i] = color;
         }
-
+    
         ledStrip.write(colors, LED_COUNT);
                 
         Sector_En_Cours ++;
