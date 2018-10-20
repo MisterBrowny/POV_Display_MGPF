@@ -235,7 +235,7 @@ namespace Pololu
 
     #endif
 
-    //__disable_irq();   // Disable interrupts temporarily because we don't want our pulse timing to be messed up.
+    __disable_irq();   // Disable interrupts temporarily because we don't want our pulse timing to be messed up.
 
     while(count--)
     {
@@ -366,7 +366,7 @@ namespace Pololu
         __disable_irq();
       }
     }
-    //__enable_irq();         // Re-enable interrupts now that we are done.
+    __enable_irq();         // Re-enable interrupts now that we are done.
     delayMicroseconds(50);  // Send the reset signal.
   }
 
