@@ -55,13 +55,12 @@ void Calcul_Time_By_Sector()
     Serial.print("Nb tours (en ");
     Serial.print(TEMPS_COMPTAGE);
     Serial.print("ms) : ");
-    Serial.print(NbTours);
-    Serial.println("\n");
+    Serial.println(NbTours);
     
     // Optionnel affiche la vitesse en Tr/min
     Serial.print("Speed: ");
     Serial.print(CONVERT_TR_PAR_MIN(NbTours));
-    Serial.println("Tr/min \n");
+    Serial.println("Tr/min");
     
     Time_By_Sector = CONVERT_us_PAR_SECTOR(NbTours);
     
