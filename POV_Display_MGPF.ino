@@ -10,7 +10,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 rgb_color colors[LED_COUNT];
 
 #define TEMPS_COMPTAGE  10000    // en ms
-#define NB_SECTOR       13
+#define NB_SECTOR       2
 
 #define CONVERT_us_PAR_SECTOR(v)    (unsigned long) ((float) (TEMPS_COMPTAGE * 1000.0f) / (float) (v * NB_SECTOR))
 #define CONVERT_TR_PAR_MIN(v)       (float) ((float) v * 1000.0f * 60.0f / TEMPS_COMPTAGE)
@@ -85,20 +85,20 @@ void loop()
     {
         Count_us = micros();
 
-        i = Sector_En_Cours % 13;
+        i = Sector_En_Cours % 2;
 
         switch (i)
         {
             case 0:
             {
-                color.red = 0;
+                color.red = 255;
                 color.green = 0;
                 color.blue = 0;
             }
             break;
             case 1:
             {
-                color.red = 255;
+                color.red = 0;
                 color.green = 0;
                 color.blue = 0;
              }
