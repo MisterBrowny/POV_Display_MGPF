@@ -42,12 +42,22 @@ void setup()
 
     // Configure outputs
     pinMode(OUTPUT_COM, OUTPUT);
+
+    // Initialise la liaison série à 9600 bauds
+    Serial.begin(9600);
 }
 
 void Calcul_Time_By_Sector()
 {
     NbTours = (Count - MemoCount);
 
+    // Optionnel affiche le nombre de tours
+    Serial.print("Nb tours (en ");
+    Serial.print(TEMPS_COMPTAGE);
+    Serial.print("ms) : ");
+    Serial.print(NbTours);
+    Serial.println("\n");
+    
     // Optionnel affiche la vitesse en Tr/min
     Serial.print("Speed: ");
     Serial.print(CONVERT_TR_PAR_MIN(NbTours));
