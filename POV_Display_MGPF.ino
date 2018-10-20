@@ -64,6 +64,10 @@ void Calcul_Time_By_Sector()
     
     Time_By_Sector = CONVERT_us_PAR_SECTOR(NbTours);
     
+    // Optionnel affiche le temps attribué par secteurs
+    Serial.print("Temps par secteur : ");
+    Serial.println(Time_By_Sector);
+    
     MemoCount = Count;
 }
 
