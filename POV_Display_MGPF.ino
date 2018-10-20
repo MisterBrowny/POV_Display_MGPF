@@ -10,7 +10,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 rgb_color colors[LED_COUNT];
 
 #define TEMPS_COMPTAGE  10000    // en ms
-#define NB_SECTOR       2
+#define NB_SECTOR       13
 
 #define CONVERT_us_PAR_SECTOR(v)    (unsigned long) ((float) (TEMPS_COMPTAGE * 1000.0f) / (float) (v * NB_SECTOR))
 #define CONVERT_TR_PAR_MIN(v)       (float) ((float) v * 1000.0f * 60.0f / TEMPS_COMPTAGE)
@@ -37,7 +37,7 @@ void setup()
     pinMode(INPUT_CAPTEUR, INPUT);
 
     // Configure interruptions
-    enableInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, RISING);
+    enableInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, FALLING);
 
     // Configure outputs
     pinMode(OUTPUT_COM, OUTPUT);
@@ -85,55 +85,111 @@ void loop()
     {
         Count_us = micros();
 
-        i = Sector_En_Cours % 4;
+        i = Sector_En_Cours % 13;
 
         switch (i)
         {
             case 0:
             {
-                color.red = 127;
-                color.green = 127;
-                color.blue = 127;
-                // Update the colors buffer.
-                for(i = 0; i < LED_COUNT; i++)
-                {
-                    colors[i] = color;
-                }
-
-                //ledStrip.write(colors, LED_COUNT);
-                
+                color.red = 0;
+                color.green = 0;
+                color.blue = 0;
             }
             break;
             case 1:
             {
-                color.red = 0;
+                color.red = 255;
                 color.green = 0;
                 color.blue = 0;
-                // Update the colors buffer.
-                for(i = 0; i < LED_COUNT; i++)
-                {
-                    colors[i] = color;
-                }
-
-                //ledStrip.write(colors, LED_COUNT);
-            }
+             }
             break;
             case 2:
+            {
+                color.red = 255;
+                color.green = 127;
+                color.blue = 0;
+            }
+            break;
+            case 3:
+            {
+                color.red = 255;
+                color.green = 255;
+                color.blue = 0;
+            }
+            break;
+            case 4:
+            {
+                color.red = 127;
+                color.green = 255;
+                color.blue = 0;
+            }
+            break;
+            case 5:
             {
                 color.red = 0;
                 color.green = 255;
                 color.blue = 0;
             }
             break;
-            case 3:
+            case 6:
+            {
+                color.red = 0;
+                color.green = 255;
+                color.blue = 127;
+            }
+            break;
+            case 7:
+            {
+                color.red = 0;
+                color.green = 255;
+                color.blue = 255;
+            }
+            break;
+            case 8:
+            {
+                color.red = 0;
+                color.green = 127;
+                color.blue = 255;
+            }
+            break;
+            case 9:
             {
                 color.red = 0;
                 color.green = 0;
                 color.blue = 255;
             }
             break;
+            case 10:
+            {
+                color.red = 127;
+                color.green = 0;
+                color.blue = 255;
+            }
+            break;
+            case 11:
+            {
+                color.red = 255;
+                color.green = 0;
+                color.blue = 255;
+            }
+            break;
+            case 12:
+            {
+                color.red = 255;
+                color.green = 0;
+                color.blue = 127;
+            }
+            break;
         }
 
+        // Update the colors buffer.
+        for(i = 0; i < LED_COUNT; i++)
+        {
+            colors[i] = color;
+        }
+
+        ledStrip.write(colors, LED_COUNT);
+                
         Sector_En_Cours ++;
     }
 }
