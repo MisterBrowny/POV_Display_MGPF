@@ -52,21 +52,21 @@ void Calcul_Time_By_Sector()
     MemoCount = Count;
     
     // Optionnel affiche le nombre de tours
-    //Serial.print("Nb tours (en ");
-    //Serial.print(TEMPS_COMPTAGE);
-    //Serial.print("ms) : ");
-    //Serial.println(NbTours);
+    Serial.print("Nb tours (en ");
+    Serial.print(TEMPS_COMPTAGE);
+    Serial.print("ms) : ");
+    Serial.println(NbTours);
     
     // Optionnel affiche la vitesse en Tr/min
-    //Serial.print("Speed: ");
-    //Serial.print(CONVERT_TR_PAR_MIN(NbTours));
-    //Serial.println("Tr/min");
+    Serial.print("Speed: ");
+    Serial.print(CONVERT_TR_PAR_MIN(NbTours));
+    Serial.println("Tr/min");
     
     Time_By_Sector = CONVERT_us_PAR_SECTOR(NbTours);
     
     // Optionnel affiche le temps attribué par secteurs
-    //Serial.print("Temps par secteur : ");
-    //Serial.println(Time_By_Sector);
+    Serial.print("Temps par secteur : ");
+    Serial.println(Time_By_Sector);
 }
 
 void loop()
