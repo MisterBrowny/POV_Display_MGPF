@@ -94,7 +94,6 @@ void loop()
                 color.red = 127;
                 color.green = 127;
                 color.blue = 127;
-
                 // Update the colors buffer.
                 for(i = 0; i < LED_COUNT; i++)
                 {
@@ -102,13 +101,21 @@ void loop()
                 }
 
                 ledStrip.write(colors, LED_COUNT);
+                
             }
             break;
             case 1:
             {
-                color.red = 255;
+                color.red = 0;
                 color.green = 0;
                 color.blue = 0;
+                // Update the colors buffer.
+                for(i = 0; i < LED_COUNT; i++)
+                {
+                    colors[i] = color;
+                }
+
+                ledStrip.write(colors, LED_COUNT);
             }
             break;
             case 2:
