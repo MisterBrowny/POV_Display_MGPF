@@ -27,8 +27,39 @@ unsigned int    Sector_En_Cours;
 // Définition des interruptions
 void Capteur_Interrupt()
 {
+    unsigned int i;
+    rgb_color color;
+    
     Count ++;
     Sector_En_Cours = 0;
+
+    i = Count % 2;
+    
+    switch (i)
+    {
+        case 0:
+        {
+            color.red = 255;
+            color.green = 0;
+            color.blue = 0;
+        }
+        break;
+        case 1:
+        {
+            color.red = 0;
+            color.green = 0;
+            color.blue = 0;
+        }
+        break;
+    }
+        
+    // Update the colors buffer.
+    for(i = 0; i < LED_COUNT; i++)
+    {
+        colors[i] = color;
+    }
+
+    ledStrip.write(colors, LED_COUNT);
 }
 
 void setup()
@@ -81,7 +112,7 @@ void loop()
         Calcul_Time_By_Sector();
     }*/
 
-    if (MemoCount != Count)
+    /*if (MemoCount != Count)
     {
         MemoCount = Count;
         i = Count % 2;
@@ -113,5 +144,5 @@ void loop()
         ledStrip.write(colors, LED_COUNT);
                 
         Sector_En_Cours ++;
-    }
+    }*/
 }
