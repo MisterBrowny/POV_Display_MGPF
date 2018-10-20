@@ -81,7 +81,7 @@ void loop()
         Calcul_Time_By_Sector();
     }
 
-    if ((unsigned long) (micros() - Count_us) > Time_By_Sector)
+    /*if ((unsigned long) (micros() - Count_us) > Time_By_Sector)
     {
         Count_us = micros();
 
@@ -191,5 +191,5 @@ void loop()
         ledStrip.write(colors, LED_COUNT);
                 
         Sector_En_Cours ++;
-    }
+    }*/
 }
