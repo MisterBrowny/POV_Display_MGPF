@@ -1,7 +1,3 @@
-#include <DMXSerial2.h>
-#include <rdm.h>
-
-
 #include <EnableInterrupt.h>
 #include "PololuLedStrip.h"
 
