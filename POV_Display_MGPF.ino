@@ -1,6 +1,6 @@
 
 #include <EnableInterrupt.h>
-#include <PololuLedStrip.h>
+#include "PololuLedStrip.h"
 
 #define INPUT_CAPTEUR   4
 #define OUTPUT_COM      7
@@ -10,7 +10,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 #define LED_COUNT 28
 rgb_color colors[LED_COUNT];
 
-#define TEMPS_COMPTAGE  2000    // en ms
+#define TEMPS_COMPTAGE  10000    // en ms
 #define NB_SECTOR       36
 
 #define CONVERT_us_PAR_SECTOR(v)    (unsigned long) ((float) (TEMPS_COMPTAGE * 1000.0f) / (float) (v * NB_SECTOR))
@@ -49,8 +49,9 @@ void setup()
 
 void Calcul_Time_By_Sector()
 {
-    NbTours = (Count - MemoCount);
-
+    NbTours = (unsigned char) (Count - MemoCount);
+    MemoCount = Count;
+    
     // Optionnel affiche le nombre de tours
     Serial.print("Nb tours (en ");
     Serial.print(TEMPS_COMPTAGE);
@@ -67,8 +68,6 @@ void Calcul_Time_By_Sector()
     // Optionnel affiche le temps attribué par secteurs
     Serial.print("Temps par secteur : ");
     Serial.println(Time_By_Sector);
-    
-    MemoCount = Count;
 }
 
 void loop()
@@ -83,7 +82,7 @@ void loop()
         Calcul_Time_By_Sector();
     }
 
-    if ((micros() - Count_us) > Time_By_Sector)
+    if ((unsigned long) (micros() - Count_us) > Time_By_Sector)
     {
         Count_us = micros();
 
