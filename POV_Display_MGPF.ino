@@ -1,3 +1,6 @@
+#include <DMXSerial2.h>
+#include <rdm.h>
+
 
 #include <EnableInterrupt.h>
 #include "PololuLedStrip.h"
@@ -11,7 +14,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 rgb_color colors[LED_COUNT];
 
 #define TEMPS_COMPTAGE  10000    // en ms
-#define NB_SECTOR       36
+#define NB_SECTOR       4
 
 #define CONVERT_us_PAR_SECTOR(v)    (unsigned long) ((float) (TEMPS_COMPTAGE * 1000.0f) / (float) (v * NB_SECTOR))
 #define CONVERT_TR_PAR_MIN(v)       (float) ((float) v * 1000.0f * 60.0f / TEMPS_COMPTAGE)
@@ -92,9 +95,17 @@ void loop()
         {
             case 0:
             {
-                color.red = 0;
-                color.green = 0;
-                color.blue = 0;
+                color.red = 127;
+                color.green = 127;
+                color.blue = 127;
+
+                // Update the colors buffer.
+                for(i = 0; i < LED_COUNT; i++)
+                {
+                    colors[i] = color;
+                }
+
+                ledStrip.write(colors, LED_COUNT);
             }
             break;
             case 1:
@@ -120,14 +131,6 @@ void loop()
             break;
         }
 
-        // Update the colors buffer.
-        for(i = 0; i < LED_COUNT; i++)
-        {
-            colors[i] = color;
-        }
-        
-        ledStrip.write(colors, LED_COUNT);
-        
         Sector_En_Cours ++;
     }
 }
