@@ -100,7 +100,7 @@ void loop()
                     colors[i] = color;
                 }
 
-                ledStrip.write(colors, LED_COUNT);
+                //ledStrip.write(colors, LED_COUNT);
                 
             }
             break;
@@ -115,7 +115,7 @@ void loop()
                     colors[i] = color;
                 }
 
-                ledStrip.write(colors, LED_COUNT);
+                //ledStrip.write(colors, LED_COUNT);
             }
             break;
             case 2:
