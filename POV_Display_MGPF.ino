@@ -18,7 +18,9 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 rgb_color colors[LED_COUNT];
 
 unsigned char   Step;
-unsigned int    Delay_Inter_Step = 5000;    // delay entre chaque step en µs 
+unsigned int    Delay_Inter_Step;
+unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
+unsigned int    Delay_Inter_Step_Min = 250;    // delay entre chaque step en µs 
 
 // Définition des interruptions
 void Capteur_Interrupt()
@@ -41,11 +43,14 @@ void setup()
     enableInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, FALLING);
 
     pinMode(MOT_STEPPER, OUTPUT);
+
+    Delay_Inter_Step = Delay_Inter_Step_Max;
 }
 
 void loop()
 {   
-    unsigned char temp = Step % 4;
+    unsigned char   temp = Step % 4;
+    unsigned int    i;
     rgb_color color;
 
     switch (temp)
@@ -81,11 +86,21 @@ void loop()
     }
     //myStepper.onestep(1);
     
+    // Update the colors buffer.
+    for(i = 0; i < LED_COUNT; i++)
+    {
+        colors[i] = color;
+    }
+
+    ledStrip.write(colors, LED_COUNT);
+    
     digitalWrite(MOT_STEPPER, HIGH);
     digitalWrite(MOT_STEPPER, LOW);
     
     if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
     
     if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
+
+    if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
 }
 
