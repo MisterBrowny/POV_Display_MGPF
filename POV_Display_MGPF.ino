@@ -139,6 +139,6 @@ void loop()
     if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
     if (Value  > Value_Min)                         {   Value --;               }
     
-    if (++ Sector >= 100)  { Sector =0;}
+    if (++ Sector >= 99)  { Sector =0;}
 }
 
