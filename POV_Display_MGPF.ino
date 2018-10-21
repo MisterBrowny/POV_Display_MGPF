@@ -20,7 +20,7 @@ rgb_color colors[LED_COUNT];
 unsigned char   Step;
 unsigned int    Delay_Inter_Step;
 unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
-unsigned int    Delay_Inter_Step_Min = 250;    // delay entre chaque step en µs 
+unsigned int    Delay_Inter_Step_Min = 0;    // delay entre chaque step en µs 
 
 // Définition des interruptions
 void Capteur_Interrupt()
