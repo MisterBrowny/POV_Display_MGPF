@@ -14,7 +14,7 @@ Stepper myStepper(stepsPerRevolution, 2, 3, 4, 5);
 
 PololuLedStrip<OUTPUT_COM> ledStrip;
 
-#define LED_COUNT 20
+#define LED_COUNT 28
 rgb_color colors[LED_COUNT];
 
 unsigned char   Step, Sector;
@@ -22,7 +22,7 @@ unsigned int    Delay_Inter_Step;
 unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
 unsigned int    Delay_Inter_Step_Min = 0;    // delay entre chaque step en µs 
 
-unsigned int    Value = 400;
+unsigned int    Value = 200;
 
 // Définition des interruptions
 void Capteur_Interrupt()
