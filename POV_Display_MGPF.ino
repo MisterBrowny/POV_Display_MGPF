@@ -2,7 +2,7 @@
 #include "Stepper.h"
 #include "PololuLedStrip.h"
 
-const int stepsPerRevolution = 200;  // number of steps per revolution
+const int stepsPerRevolution = 400;  // number of steps per revolution
 
 // initialize the stepper library on pins 2 through 5:
 Stepper myStepper(stepsPerRevolution, 2, 3, 4, 5);
@@ -134,6 +134,6 @@ void loop()
 
     if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
     
-    Sector ++;
+    if (++ Sector >= 100)  { Sector =0;}
 }
 
