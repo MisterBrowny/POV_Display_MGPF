@@ -17,7 +17,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 #define LED_COUNT 28
 rgb_color colors[LED_COUNT];
 
-unsigned char   Step, Sector, NbTours;
+unsigned char   Step, Sector, NbTours, MemoNbTours;
 unsigned int    Delay_Inter_Step;
 unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
 unsigned int    Delay_Inter_Step_Min = 0;    // delay entre chaque step en µs 
@@ -56,56 +56,60 @@ void setup()
 
 void loop()
 {   
-    unsigned char   temp = NbTours % 2;
+    unsigned char   temp = NbTours % 4;
     unsigned int    i;
     rgb_color color;
 
-    switch (temp)
+    if (NbTours != MemoNbTours)
     {
-        case 0:
+        MemoNbTours = NbTours;
+        switch (temp)
         {
-            color.red = 0;
-            color.green = 0;
-            color.blue = 0;
+            case 0:
+            {
+                color.red = 0;
+                color.green = 0;
+                color.blue = 0;
+            }
+            break;
+            case 1:
+            {
+                color.red = 255;
+                color.green = 0;
+                color.blue = 0;
+            }
+            break;
+            case 2:
+            {
+                color.red = 0;
+                color.green = 255;
+                color.blue = 0;
+            }
+            break;
+            case 3:
+            {
+                color.red = 0;
+                color.green = 0;
+                color.blue = 255;
+            }
+            break;
+            default:
+            {
+                color.red = 0;
+                color.green = 0;
+                color.blue = 0;
+            }
+            break;
         }
-        break;
-        case 1:
+        //myStepper.onestep(1);
+        
+        // Update the colors buffer.
+        for(i = 0; i < LED_COUNT; i++)
         {
-            color.red = 255;
-            color.green = 0;
-            color.blue = 0;
+            colors[i] = color;
         }
-        break;
-        case 2:
-        {
-            color.red = 0;
-            color.green = 255;
-            color.blue = 0;
-        }
-        break;
-        case 3:
-        {
-            color.red = 0;
-            color.green = 0;
-            color.blue = 255;
-        }
-        break;
-        default:
-        {
-            color.red = 0;
-            color.green = 0;
-            color.blue = 0;
-        }
-        break;
     }
-    //myStepper.onestep(1);
     
-    // Update the colors buffer.
-    for(i = 0; i < LED_COUNT; i++)
-    {
-        colors[i] = color;
-    }
-
     ledStrip.write(colors, LED_COUNT);
     
     digitalWrite(MOT_STEPPER, HIGH);
