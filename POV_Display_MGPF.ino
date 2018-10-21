@@ -10,6 +10,8 @@ Stepper myStepper(stepsPerRevolution, 2, 3, 4, 5);
 #define INPUT_CAPTEUR   8
 #define OUTPUT_COM      7
 
+#define MOT_STEPPER      5
+
 PololuLedStrip<OUTPUT_COM> ledStrip;
 
 #define LED_COUNT 28
@@ -37,6 +39,8 @@ void setup()
 
     // Configure interruptions
     enableInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, FALLING);
+
+    pinMode(MOT_STEPPER, OUTPUT);
 }
 
 void loop()
@@ -75,8 +79,11 @@ void loop()
         }
         break;
     }
-    myStepper.onestep(1);
-
+    //myStepper.onestep(1);
+    
+    digitalWrite(MOT_STEPPER, HIGH);
+    digitalWrite(MOT_STEPPER, LOW);
+    
     if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
     
     if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
