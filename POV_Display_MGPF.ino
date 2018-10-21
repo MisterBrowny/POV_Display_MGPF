@@ -17,7 +17,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 #define LED_COUNT 28
 rgb_color colors[LED_COUNT];
 
-unsigned char   Step, Sector;
+unsigned char   Step, Sector, NbTours;
 unsigned int    Delay_Inter_Step;
 unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
 unsigned int    Delay_Inter_Step_Min = 0;    // delay entre chaque step en µs 
@@ -56,7 +56,7 @@ void setup()
 
 void loop()
 {   
-    unsigned char   temp = Sector % 4;
+    unsigned char   temp = NbTours % 2;
     unsigned int    i;
     rgb_color color;
 
@@ -139,6 +139,11 @@ void loop()
     if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
     if (Value  > Value_Min)                         {   Value --;               }
     
-    if (++ Sector >= 99)  { Sector =0;}
+    if (++ Sector >= 100)  
+    {
+        Sector =0;
+        NbTours ++;
+    }
+    
 }
 
