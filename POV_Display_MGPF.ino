@@ -96,6 +96,8 @@ void loop()
     
     digitalWrite(MOT_STEPPER, HIGH);
     digitalWrite(MOT_STEPPER, LOW);
+    digitalWrite(MOT_STEPPER, HIGH);
+    digitalWrite(MOT_STEPPER, LOW);
     
     if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
     
