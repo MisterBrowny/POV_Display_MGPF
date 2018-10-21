@@ -51,6 +51,7 @@ void setup()
 
 void loop()
 {   
+    if (Start
     unsigned char   temp = NbTours % 4;
     unsigned int    i;
     rgb_color color;
@@ -108,9 +109,8 @@ void loop()
     ledStrip.write(colors, LED_COUNT);
 
     digitalWrite(MOT_STEPPER, HIGH);
+    digitalWrite(MOT_STEPPER, LOW);
     
-    if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
-
     if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
 
     if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
