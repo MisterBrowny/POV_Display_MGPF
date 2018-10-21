@@ -17,11 +17,6 @@ unsigned int    Delay_Inter_Step;
 unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
 unsigned int    Delay_Inter_Step_Min = 300;    // delay entre chaque step en µs 
 
-unsigned int    Value;
-unsigned int    Value_Max = 500;
-unsigned int    Value_Min = 200;
-
-
 // Définition des interruptions
 void Capteur_Interrupt()
 {
@@ -45,7 +40,6 @@ void setup()
     pinMode(MOT_STEPPER, OUTPUT);
 
     Delay_Inter_Step = Delay_Inter_Step_Max;
-    Value = Value_Max;
 }
 
 void loop()
