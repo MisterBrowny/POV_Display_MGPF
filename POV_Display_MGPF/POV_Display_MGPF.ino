@@ -25,8 +25,7 @@ unsigned int    Value_Min = 200;
 // Définition des interruptions
 void Capteur_Interrupt()
 {
-    //Step = 0;
-    //Sector = 0;
+    InitPos = True;
 }
 
 void setup()
@@ -51,75 +50,83 @@ void setup()
 
 void loop()
 {   
-    if (Start
-    unsigned char   temp = NbTours % 4;
-    unsigned int    i;
-    rgb_color color;
-
-    if (NbTours != MemoNbTours)
+    if (InitPos == False)
     {
-        MemoNbTours = NbTours;
-        switch (temp)
+        digitalWrite(MOT_STEPPER, HIGH);
+        digitalWrite(MOT_STEPPER, LOW);
+    
+        delayMicroseconds(1200);
+    }
+    else
+    {   
+        unsigned char   temp = NbTours % 4;
+        unsigned int    i;
+        rgb_color color;
+    
+        if (NbTours != MemoNbTours)
         {
-            case 0:
+            MemoNbTours = NbTours;
+            switch (temp)
             {
-                color.red = 0;
-                color.green = 0;
-                color.blue = 0;
+                case 0:
+                {
+                    color.red = 0;
+                    color.green = 0;
+                    color.blue = 0;
+                }
+                break;
+                case 1:
+                {
+                    color.red = 255;
+                    color.green = 0;
+                    color.blue = 0;
+                }
+                break;
+                case 2:
+                {
+                    color.red = 0;
+                    color.green = 255;
+                    color.blue = 0;
+                }
+                break;
+                case 3:
+                {
+                    color.red = 0;
+                    color.green = 0;
+                    color.blue = 255;
+                }
+                break;
+                default:
+                {
+                    color.red = 0;
+                    color.green = 0;
+                    color.blue = 0;
+                }
+                break;
             }
-            break;
-            case 1:
+            //myStepper.onestep(1);
+            
+            // Update the colors buffer.
+            for(i = 0; i < LED_COUNT; i++)
             {
-                color.red = 255;
-                color.green = 0;
-                color.blue = 0;
+                colors[i] = color;
             }
-            break;
-            case 2:
-            {
-                color.red = 0;
-                color.green = 255;
-                color.blue = 0;
-            }
-            break;
-            case 3:
-            {
-                color.red = 0;
-                color.green = 0;
-                color.blue = 255;
-            }
-            break;
-            default:
-            {
-                color.red = 0;
-                color.green = 0;
-                color.blue = 0;
-            }
-            break;
         }
-        //myStepper.onestep(1);
         
-        // Update the colors buffer.
-        for(i = 0; i < LED_COUNT; i++)
+        ledStrip.write(colors, LED_COUNT);
+    
+        digitalWrite(MOT_STEPPER, HIGH);
+        digitalWrite(MOT_STEPPER, LOW);
+        
+        if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
+    
+        if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
+        
+        if (++ Sector >= 100)  
         {
-            colors[i] = color;
+            Sector =0;
+            NbTours ++;
         }
-    }
-    
-    ledStrip.write(colors, LED_COUNT);
-
-    digitalWrite(MOT_STEPPER, HIGH);
-    digitalWrite(MOT_STEPPER, LOW);
-    
-    if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
-
-    if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
-    
-    if (++ Sector >= 100)  
-    {
-        Sector =0;
-        NbTours ++;
-    }
-    
+    } 
 }
 
