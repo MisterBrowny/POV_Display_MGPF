@@ -7,7 +7,9 @@
 // initialize the stepper library on pins 2 through 5:
 //Stepper stepper(stepsPerRevolution, 2, 3, 4, 5);
 
-unsigned int    Value = 300;
+unsigned int    Value;
+unsigned int    Value_Max = 1000;
+unsigned int    Value_Min = 300;
 bool            Top = false;
 
 void Capteur_Interrupt()
@@ -23,6 +25,8 @@ void setup() {
     enableInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, RISING);
 
     pinMode(MOT_STEPPER, OUTPUT);
+
+    Value = Value_Max;
 }
 
 void loop() {
@@ -49,5 +53,5 @@ void loop() {
 
         Top = false;
     }
-    
+    if (Value > Value_Min) {    Value --;   }
 }
