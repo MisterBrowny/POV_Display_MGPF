@@ -16,7 +16,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 rgb_color colors[LED_COUNT];
 
 unsigned char   Step;
-unsigned int    Delay_Inter_Step = 1000;    // delay entre chaque step en µs 
+unsigned int    Delay_Inter_Step = 5000;    // delay entre chaque step en µs 
 
 // Définition des interruptions
 void Capteur_Interrupt()
@@ -37,9 +37,6 @@ void setup()
 
     // Configure interruptions
     enableInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, FALLING);
-
-    // Initialize le moteur pas à pas
-    myStepper.setSpeed(60);
 }
 
 void loop()
