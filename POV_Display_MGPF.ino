@@ -30,8 +30,8 @@ unsigned int    Value_Min = 200;
 // Définition des interruptions
 void Capteur_Interrupt()
 {
-    Step = 0;
-    Sector = 0;
+    //Step = 0;
+    //Sector = 0;
 }
 
 void setup()
