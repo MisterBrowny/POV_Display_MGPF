@@ -1,16 +1,11 @@
 #include <EnableInterrupt.h>
-#include "Stepper.h"
 #include "PololuLedStrip.h"
 
 const int stepsPerRevolution = 400;  // number of steps per revolution
 
-// initialize the stepper library on pins 2 through 5:
-Stepper myStepper(stepsPerRevolution, 2, 3, 4, 5);
-
 #define INPUT_CAPTEUR   8
 #define OUTPUT_COM      7
-
-#define MOT_STEPPER      5
+#define MOT_STEPPER     5
 
 PololuLedStrip<OUTPUT_COM> ledStrip;
 
@@ -20,7 +15,7 @@ rgb_color colors[LED_COUNT];
 unsigned char   Step, Sector, NbTours, MemoNbTours;
 unsigned int    Delay_Inter_Step;
 unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
-unsigned int    Delay_Inter_Step_Min = 0;    // delay entre chaque step en µs 
+unsigned int    Delay_Inter_Step_Min = 300;    // delay entre chaque step en µs 
 
 unsigned int    Value;
 unsigned int    Value_Max = 500;
@@ -111,37 +106,14 @@ void loop()
     }
     
     ledStrip.write(colors, LED_COUNT);
-    
-    digitalWrite(MOT_STEPPER, HIGH);
-    digitalWrite(MOT_STEPPER, LOW);
 
-    if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
-
-    delayMicroseconds(Value);
-    
     digitalWrite(MOT_STEPPER, HIGH);
-    digitalWrite(MOT_STEPPER, LOW);
-    
-    if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
-
-    delayMicroseconds(Value);
-    
-    digitalWrite(MOT_STEPPER, HIGH);
-    digitalWrite(MOT_STEPPER, LOW);
-    
-    if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
-
-    delayMicroseconds(Value);
-    
-    digitalWrite(MOT_STEPPER, HIGH);
-    digitalWrite(MOT_STEPPER, LOW);
     
     if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
 
     if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
 
     if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
-    if (Value  > Value_Min)                         {   Value --;               }
     
     if (++ Sector >= 100)  
     {
