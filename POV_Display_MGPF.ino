@@ -83,6 +83,13 @@ void loop()
             color.blue = 255;
         }
         break;
+        default:
+        {
+            color.red = 0;
+            color.green = 0;
+            color.blue = 0;
+        }
+        break;
     }
     //myStepper.onestep(1);
     

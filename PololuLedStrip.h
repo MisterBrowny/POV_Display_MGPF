@@ -371,7 +371,7 @@ namespace Pololu
     }
     //__enable_irq();         // Re-enable interrupts now that we are done.
     SREG = oldSREG;;
-    delayMicroseconds(80);  // Send the reset signal.
+    delayMicroseconds(50);  // Send the reset signal.
   }
 
 }
