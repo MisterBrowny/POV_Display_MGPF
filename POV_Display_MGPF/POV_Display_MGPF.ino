@@ -50,7 +50,7 @@ void loop()
         digitalWrite(MOT_STEPPER, HIGH);
         digitalWrite(MOT_STEPPER, LOW);
     
-        delayMicroseconds(1200);
+        delayMicroseconds(2000);
     }
     else
     {   

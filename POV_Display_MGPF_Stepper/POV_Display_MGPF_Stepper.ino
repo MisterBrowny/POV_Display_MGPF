@@ -52,6 +52,7 @@ void loop() {
         digitalWrite(MOT_STEPPER, LOW);
 
         Top = false;
+        
+        if (Value > Value_Min) {    Value --;   }
     }
-    if (Value > Value_Min) {    Value --;   }
 }
