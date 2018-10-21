@@ -16,11 +16,12 @@ unsigned char   Step, Sector, NbTours, MemoNbTours;
 unsigned int    Delay_Inter_Step;
 unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
 unsigned int    Delay_Inter_Step_Min = 300;    // delay entre chaque step en µs 
+bool            InitPos;
 
 // Définition des interruptions
 void Capteur_Interrupt()
 {
-    InitPos = True;
+    InitPos = true;
 }
 
 void setup()
@@ -44,7 +45,7 @@ void setup()
 
 void loop()
 {   
-    if (InitPos == False)
+    if (InitPos == false)
     {
         digitalWrite(MOT_STEPPER, HIGH);
         digitalWrite(MOT_STEPPER, LOW);
