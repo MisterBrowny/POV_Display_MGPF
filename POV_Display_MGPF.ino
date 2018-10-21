@@ -22,6 +22,8 @@ unsigned int    Delay_Inter_Step;
 unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
 unsigned int    Delay_Inter_Step_Min = 0;    // delay entre chaque step en µs 
 
+unsigned int    Value = 900;
+
 // Définition des interruptions
 void Capteur_Interrupt()
 {
@@ -105,17 +107,14 @@ void loop()
     digitalWrite(MOT_STEPPER, LOW);
 
     if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
+
+    delayMicroseconds(Value);
     
     digitalWrite(MOT_STEPPER, HIGH);
     digitalWrite(MOT_STEPPER, LOW);
     
     if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
 
-    digitalWrite(MOT_STEPPER, HIGH);
-    digitalWrite(MOT_STEPPER, LOW);
-    
-    if (++ Step >= stepsPerRevolution)  {   Step = 0;   }
-    
     if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
 
     if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
