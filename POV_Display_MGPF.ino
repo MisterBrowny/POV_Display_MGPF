@@ -19,11 +19,11 @@ rgb_color colors[LED_COUNT];
 
 unsigned char   Step, Sector, NbTours, MemoNbTours;
 unsigned int    Delay_Inter_Step;
-unsigned int    Delay_Inter_Step_Max = 1000;    // delay entre chaque step en µs 
+unsigned int    Delay_Inter_Step_Max = 10000;    // delay entre chaque step en µs 
 unsigned int    Delay_Inter_Step_Min = 0;    // delay entre chaque step en µs 
 
 unsigned int    Value;
-unsigned int    Value_Max = 1000;
+unsigned int    Value_Max = 10000;
 unsigned int    Value_Min = 200;
 
 
