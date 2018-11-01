@@ -8,7 +8,7 @@
 //Stepper stepper(stepsPerRevolution, 2, 3, 4, 5);
 
 unsigned int    Value;
-unsigned int    Value_Max = 1000;
+unsigned int    Value_Max = 2000;
 unsigned int    Value_Min = 300;
 bool            Top = false;
 
