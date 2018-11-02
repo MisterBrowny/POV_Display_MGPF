@@ -46,7 +46,11 @@ ISR (SPI_STC_vect)
     else if (SPI_color == 1)    {   SPI_colors[SPI_led_number].green = c;   }
     else                        {   SPI_colors[SPI_led_number].blue = c;    }
     
-    if (++ SPI_color >= NB_BYTE_PAR_LED)    {   SPI_led_number ++;  }
+    if (++ SPI_color >= NB_BYTE_PAR_LED)    
+    {  
+        SPI_color = 0;
+        SPI_led_number ++; 
+    }
     if (SPI_led_number >= NB_LED_DISPLAY)   
     {
         SPI_led_number = 0;
