@@ -109,6 +109,7 @@ void loop()
 	
     if (Write == true)
     {
+    	digitalWrite(MOT_STEPPER, HIGH);
 		Serial.println("début trame");
 		for(i = 0; i < (28 * 3); i++)
         {
@@ -122,7 +123,7 @@ void loop()
         delayMicroseconds(50);
         
         Write = false;
-		
+		digitalWrite(MOT_STEPPER, LOW);
     }
     else if ((millis() - SPI_Rcv_Time) > SPI_TIME_OUT)
     {
