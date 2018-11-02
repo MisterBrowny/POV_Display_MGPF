@@ -22,6 +22,7 @@ bool            InitPos;
 
 #define         NB_LED_DISPLAY      28
 #define         NB_BYTE_PAR_LED     3
+#define			NB_DATAS			(NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 
 #define         SPI_TIME_OUT        20 //ms
 
@@ -40,8 +41,7 @@ void Capteur_Interrupt()
 ISR (SPI_STC_vect)
 {
     byte c = SPDR;  // grab byte from SPI Data Register
-  	//byte	quot = div(Cpt,3);
-  	//byte	rem = Cpt%3;
+  	div_t	temp = div(Cpt,3);
   	
     // add to buffer if room
     /*if (SPI_color == 0)         {   SPI_colors[SPI_led_number].red = c;     }
@@ -64,11 +64,12 @@ ISR (SPI_STC_vect)
     
     SPI_Rcv_Time = micros();
     */
-    //if (rem == 0) 		{	SPI_colors[quot].red = c;	}
-    //else if (rem == 1) 	{	SPI_colors[quot].green = c;	}
-    //else				{	SPI_colors[quot].blue = c;	}
+    if (temp.rem == 0) 			{	SPI_colors[temp.quot].red = c;		}
+    else if (temp.rem == 1) 	{	SPI_colors[temp.quot].green = c;	}
+    else						{	SPI_colors[temp.quot].blue = c;		}
+    
     data[Cpt] = c;
-    if (++ Cpt >= (28 * 3))
+    if (++ Cpt >= NB_DATAS)
     { 
     	Cpt = 0;
     	Write = true;
@@ -114,6 +115,12 @@ void loop()
         	Serial.println(data[i], DEC);
         }
         Serial.println("fin trame");
+
+        // Update the colors buffer.
+        ledStrip.write(SPI_colors, LED_COUNT);
+        
+        delayMicroseconds(50);
+        
         Write = false;
 		
     }
