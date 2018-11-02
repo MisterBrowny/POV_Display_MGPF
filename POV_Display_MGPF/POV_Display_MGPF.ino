@@ -149,11 +149,11 @@ void loop()
         for(i = 0; i < LED_COUNT; i++)
         {
             colors[i] = SPI_colors[i];
-            Serial.print(SPI_colors[0].red);
+            Serial.print(SPI_colors[i].red);
             Serial.print(',');
-            Serial.print(SPI_colors[0].green);
+            Serial.print(SPI_colors[i].green);
             Serial.print(',');
-            Serial.println(SPI_colors[0].blue);
+            Serial.println(SPI_colors[i].blue);
         }
         Write = false;
         //ledStrip.write(colors, LED_COUNT);
