@@ -93,6 +93,7 @@ void loop()
     if (Write == true)
     {   
         unsigned int    i;
+        Write = false;
         /*unsigned char   temp = Sector % 4;
         rgb_color color;
     
