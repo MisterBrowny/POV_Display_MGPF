@@ -23,7 +23,7 @@ bool            InitPos;
 #define         NB_LED_DISPLAY      28
 #define         NB_BYTE_PAR_LED     3
 
-#define         SPI_TIME_OUT        500 //µs
+#define         SPI_TIME_OUT        1500 //µs
 
 unsigned long   SPI_Rcv_Time;
 unsigned char   SPI_led_number, SPI_color;
@@ -147,7 +147,7 @@ void loop()
         
         ledStrip.write(colors, LED_COUNT);
     
-        digitalWrite(MOT_STEPPER, HIGH);
+        /*digitalWrite(MOT_STEPPER, HIGH);
         
         if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
     
@@ -159,7 +159,7 @@ void loop()
             NbTours ++;
         }
         
-        digitalWrite(MOT_STEPPER, LOW);
+        digitalWrite(MOT_STEPPER, LOW);*/
     }
 
     if ((micros() - SPI_Rcv_Time) > SPI_TIME_OUT)
