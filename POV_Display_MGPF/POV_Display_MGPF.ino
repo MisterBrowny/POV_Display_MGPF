@@ -28,7 +28,7 @@ bool            InitPos;
 unsigned long   SPI_Rcv_Time;
 unsigned char   SPI_led_number, SPI_color;
 rgb_color       SPI_colors[NB_LED_DISPLAY];
-
+bool            Write;
 
 // Définition des interruptions
 void Capteur_Interrupt()
@@ -47,7 +47,11 @@ ISR (SPI_STC_vect)
     else                        {   SPI_colors[SPI_led_number].blue = c;    }
     
     if (++ SPI_color >= NB_BYTE_PAR_LED)    {   SPI_led_number ++;  }
-
+    if (SPI_led_number >= NB_LED_DISPLAY)   
+    {
+        SPI_led_number = 0;
+        Write = true;       
+    }
     SPI_Rcv_Time = micros();
 }
 
@@ -86,6 +90,7 @@ void loop()
         delayMicroseconds(2000);
     }
     else*/
+    if (Write == true)
     {   
         unsigned int    i;
         /*unsigned char   temp = Sector % 4;
@@ -146,7 +151,8 @@ void loop()
         }
         
         ledStrip.write(colors, LED_COUNT);
-    
+        delayMicroseconds(50);
+        
         /*digitalWrite(MOT_STEPPER, HIGH);
         
         if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
