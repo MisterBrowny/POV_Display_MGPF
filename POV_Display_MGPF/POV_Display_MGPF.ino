@@ -186,11 +186,11 @@ void loop()
         digitalWrite(MOT_STEPPER, LOW);*/
     }
 
-    if ((micros() - SPI_Rcv_Time) > SPI_TIME_OUT)
+    /*if ((micros() - SPI_Rcv_Time) > SPI_TIME_OUT)
     {
         SPI_color = 0;
         SPI_led_number = 0;
         Serial.println("time out");
-    }
+    }*/
 }
 
