@@ -49,12 +49,14 @@ ISR (SPI_STC_vect)
     if (++ SPI_color >= NB_BYTE_PAR_LED)    
     {  
         SPI_color = 0;
-        SPI_led_number ++; 
+        SPI_led_number ++;
+        Serial.println("color received");
     }
     if (SPI_led_number >= NB_LED_DISPLAY)   
     {
         SPI_led_number = 0;
-        Write = true;       
+        Write = true;
+        Serial.println("toutes les color received");       
     }
     SPI_Rcv_Time = micros();
 }
