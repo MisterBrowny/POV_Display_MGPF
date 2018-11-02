@@ -93,7 +93,7 @@ void loop()
     if (Write == true)
     {   
         unsigned int    i;
-        Write = false;
+        
         /*unsigned char   temp = Sector % 4;
         rgb_color color;
     
@@ -149,10 +149,16 @@ void loop()
         for(i = 0; i < LED_COUNT; i++)
         {
             colors[i] = SPI_colors[i];
+            Serial.print(SPI_colors[0].red);
+            Serial.print(',');
+            Serial.print(SPI_colors[0].green);
+            Serial.print(',');
+            Serial.println(SPI_colors[0].blue);
         }
-        
-        ledStrip.write(colors, LED_COUNT);
-        delayMicroseconds(50);
+        Write = false;
+        //ledStrip.write(colors, LED_COUNT);
+        //delayMicroseconds(50);
+
         
         /*digitalWrite(MOT_STEPPER, HIGH);
         
