@@ -103,10 +103,12 @@ void loop()
 	
     if (Write == true)
     {
+		Serial.println("début trame");
 		for(i = 0; i < (28 * 3); i++)
         {
-        	Serial.println(data[i]);
+        	Serial.println(data[i], DEC);
         }
+        Serial.println("fin trame");
         Write = false;
 		
     }
