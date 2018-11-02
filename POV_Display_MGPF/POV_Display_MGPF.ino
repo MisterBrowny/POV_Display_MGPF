@@ -20,7 +20,7 @@ unsigned int    Delay_Inter_Step_Min = 860;    // delay entre chaque step en µs
 bool            InitPos;
 
 
-#define         NB_LED_DISPLAY      100
+#define         NB_LED_DISPLAY      28
 #define         NB_BYTE_PAR_LED     3
 
 #define         SPI_TIME_OUT        500 //µs
@@ -142,7 +142,7 @@ void loop()
         // Update the colors buffer.
         for(i = 0; i < LED_COUNT; i++)
         {
-            colors[i] = SPI_colors[Sector];
+            colors[i] = SPI_colors[i];
         }
         
         ledStrip.write(colors, LED_COUNT);
