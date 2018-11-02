@@ -34,7 +34,7 @@ rgb_color       SPI_colors[NB_LED_DISPLAY];
 void Capteur_Interrupt()
 {
     InitPos = true;
-    Sector = 0;
+    //Sector = 0;
 }
 
 ISR (SPI_STC_vect)
@@ -98,9 +98,9 @@ void loop()
             {
                 case 0:
                 {
-                    color.red = 0;
-                    color.green = 0;
-                    color.blue = 0;
+                    color.red = 100;
+                    color.green = 100;
+                    color.blue = 100;
                 }
                 break;
                 case 1:
