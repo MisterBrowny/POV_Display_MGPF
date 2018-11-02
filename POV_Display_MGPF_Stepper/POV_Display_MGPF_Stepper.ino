@@ -7,7 +7,8 @@
 // initialize the stepper library on pins 2 through 5:
 //Stepper stepper(stepsPerRevolution, 2, 3, 4, 5);
 
-unsigned int    Value;
+unsigned int    Value,
+unsigned int    Value1 = 3;
 unsigned int    Value_Max = 2000;
 unsigned int    Value_Min = 300;
 bool            Top = false;
@@ -34,21 +35,25 @@ void loop() {
     if (Top == true)
     {
         digitalWrite(MOT_STEPPER, HIGH);
+        delayMicroseconds(Value1);
         digitalWrite(MOT_STEPPER, LOW);
 
         delayMicroseconds(Value);
         
         digitalWrite(MOT_STEPPER, HIGH);
+        delayMicroseconds(Value1);
         digitalWrite(MOT_STEPPER, LOW);
         
         delayMicroseconds(Value);
         
         digitalWrite(MOT_STEPPER, HIGH);
+        delayMicroseconds(Value1);
         digitalWrite(MOT_STEPPER, LOW);
         
         delayMicroseconds(Value);
         
         digitalWrite(MOT_STEPPER, HIGH);
+        delayMicroseconds(Value1);
         digitalWrite(MOT_STEPPER, LOW);
 
         Top = false;
