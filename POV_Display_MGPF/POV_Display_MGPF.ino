@@ -20,7 +20,7 @@ unsigned int    Delay_Inter_Step_Min = 860;    // delay entre chaque step en µs
 bool            InitPos;
 
 
-#define         NB_LED_DISPLAY      161
+#define         NB_LED_DISPLAY      100
 #define         NB_BYTE_PAR_LED     3
 
 #define         SPI_TIME_OUT        500 //µs
@@ -78,14 +78,14 @@ void setup()
 
 void loop()
 {   
-    if (InitPos == false)
+    /*if (InitPos == false)
     {
         digitalWrite(MOT_STEPPER, HIGH);
         digitalWrite(MOT_STEPPER, LOW);
     
         delayMicroseconds(2000);
     }
-    else
+    else*/
     {   
         unsigned int    i;
         /*unsigned char   temp = Sector % 4;
