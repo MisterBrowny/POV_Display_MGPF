@@ -23,7 +23,7 @@ bool            InitPos;
 #define         NB_LED_DISPLAY      28
 #define         NB_BYTE_PAR_LED     3
 
-#define         SPI_TIME_OUT        20000 //ms
+#define         SPI_TIME_OUT        20 //ms
 
 unsigned long   SPI_Rcv_Time;
 unsigned char   SPI_led_number, SPI_color, data[28*3], memodata;
@@ -40,7 +40,9 @@ void Capteur_Interrupt()
 ISR (SPI_STC_vect)
 {
     byte c = SPDR;  // grab byte from SPI Data Register
-  
+  	//byte	quot = div(Cpt,3);
+  	//byte	rem = Cpt%3;
+  	
     // add to buffer if room
     /*if (SPI_color == 0)         {   SPI_colors[SPI_led_number].red = c;     }
     else if (SPI_color == 1)    {   SPI_colors[SPI_led_number].green = c;   }
@@ -62,6 +64,9 @@ ISR (SPI_STC_vect)
     
     SPI_Rcv_Time = micros();
     */
+    //if (rem == 0) 		{	SPI_colors[quot].red = c;	}
+    //else if (rem == 1) 	{	SPI_colors[quot].green = c;	}
+    //else				{	SPI_colors[quot].blue = c;	}
     data[Cpt] = c;
     if (++ Cpt >= (28 * 3))
     { 
