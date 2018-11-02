@@ -50,7 +50,8 @@ ISR (SPI_STC_vect)
     {  
         SPI_color = 0;
         SPI_led_number ++;
-        Serial.println("color received");
+        Serial.print("color received : ");
+        Serial.println(SPI_led_number);
     }
     if (SPI_led_number >= NB_LED_DISPLAY)   
     {
@@ -189,6 +190,7 @@ void loop()
     {
         SPI_color = 0;
         SPI_led_number = 0;
+        Serial.println("time out");
     }
 }
 
