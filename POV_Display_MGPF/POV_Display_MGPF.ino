@@ -87,8 +87,8 @@ void loop()
     }
     else
     {   
-        unsigned char   temp = NbTours % 4;
         unsigned int    i;
+        /*unsigned char   temp = Sector % 4;
         rgb_color color;
     
         if (NbTours != MemoNbTours)
@@ -137,6 +137,12 @@ void loop()
             {
                 colors[i] = color;
             }
+        }*/
+        
+        // Update the colors buffer.
+        for(i = 0; i < LED_COUNT; i++)
+        {
+            colors[i] = SPI_colors[Sector];
         }
         
         ledStrip.write(colors, LED_COUNT);
