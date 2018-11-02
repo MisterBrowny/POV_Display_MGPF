@@ -142,7 +142,6 @@ void loop()
         ledStrip.write(colors, LED_COUNT);
     
         digitalWrite(MOT_STEPPER, HIGH);
-        digitalWrite(MOT_STEPPER, LOW);
         
         if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
     
@@ -153,6 +152,8 @@ void loop()
             Sector = 0;
             NbTours ++;
         }
+        
+        digitalWrite(MOT_STEPPER, LOW);
     }
 
     if ((micros() - SPI_Rcv_Time) > SPI_TIME_OUT)
