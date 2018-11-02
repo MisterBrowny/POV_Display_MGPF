@@ -26,7 +26,7 @@ bool            InitPos;
 #define         SPI_TIME_OUT        1500 //µs
 
 unsigned long   SPI_Rcv_Time;
-unsigned char   SPI_led_number, SPI_color;
+unsigned char   SPI_led_number, SPI_color, data, memodata;
 rgb_color       SPI_colors[NB_LED_DISPLAY];
 bool            Write;
 
@@ -62,7 +62,9 @@ ISR (SPI_STC_vect)
     
     SPI_Rcv_Time = micros();
     */
-    Serial.println(c);
+    data = c;
+    
+    
 }
 
 void setup()
@@ -92,6 +94,12 @@ void setup()
 
 void loop()
 {   
+    if (data != memodata)
+    {
+		memodata = data;
+    	Serial.println(data);
+    }
+    
     /*if (InitPos == false)
     {
         digitalWrite(MOT_STEPPER, HIGH);
