@@ -14,7 +14,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 rgb_color colors[LED_COUNT];
 
 unsigned char   Step, Sector, NbTours, MemoNbTours;
-unsigned int    Delay_Inter_Step;
+unsigned int    Delay_Inter_Step, Cpt;
 unsigned int    Delay_Inter_Step_Max = 2000;    // delay entre chaque step en µs 
 unsigned int    Delay_Inter_Step_Min = 860;    // delay entre chaque step en µs 
 bool            InitPos;
@@ -23,10 +23,10 @@ bool            InitPos;
 #define         NB_LED_DISPLAY      28
 #define         NB_BYTE_PAR_LED     3
 
-#define         SPI_TIME_OUT        1500 //µs
+#define         SPI_TIME_OUT        20000 //ms
 
 unsigned long   SPI_Rcv_Time;
-unsigned char   SPI_led_number, SPI_color, data, memodata;
+unsigned char   SPI_led_number, SPI_color, data[28*3], memodata;
 rgb_color       SPI_colors[NB_LED_DISPLAY];
 bool            Write;
 
@@ -62,9 +62,14 @@ ISR (SPI_STC_vect)
     
     SPI_Rcv_Time = micros();
     */
-    data = c;
-    
-    
+    data[Cpt] = c;
+    if (++ Cpt >= (28 * 3))
+    { 
+    	Cpt = 0;
+    	Write = true;
+    }
+
+    SPI_Rcv_Time = millis();
 }
 
 void setup()
@@ -94,12 +99,25 @@ void setup()
 
 void loop()
 {   
-    if (data != memodata)
+	unsigned int    i;
+	
+    if (Write == true)
     {
-		memodata = data;
-    	Serial.println(data);
+		for(i = 0; i < (28 * 3); i++)
+        {
+        	Serial.println(data[i]);
+        }
+        Write = false;
+		
     }
-    
+    else if ((millis() - SPI_Rcv_Time) > SPI_TIME_OUT)
+    {
+        if (Cpt != 0)
+        {
+        	Cpt = 0;
+        	Serial.println("time out");
+        }
+    }
     /*if (InitPos == false)
     {
         digitalWrite(MOT_STEPPER, HIGH);
@@ -108,9 +126,9 @@ void loop()
         delayMicroseconds(2000);
     }
     else*/
-    if (Write == true)
-    {   
-        unsigned int    i;
+    //if (Write == true)
+    //{   
+    //    
         
         /*unsigned char   temp = Sector % 4;
         rgb_color color;
@@ -163,7 +181,7 @@ void loop()
             }
         }*/
 
-        Serial.println("début trame");
+        /*Serial.println("début trame");
         
         // Update the colors buffer.
         for(i = 0; i < LED_COUNT; i++)
@@ -180,7 +198,7 @@ void loop()
         
         //ledStrip.write(colors, LED_COUNT);
         //delayMicroseconds(50);
-
+		*/
         
         /*digitalWrite(MOT_STEPPER, HIGH);
         
@@ -195,7 +213,7 @@ void loop()
         }
         
         digitalWrite(MOT_STEPPER, LOW);*/
-    }
+    //}
 
     /*if ((micros() - SPI_Rcv_Time) > SPI_TIME_OUT)
     {
