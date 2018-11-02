@@ -144,6 +144,8 @@ void loop()
                 colors[i] = color;
             }
         }*/
+
+        Serial.println("début trame");
         
         // Update the colors buffer.
         for(i = 0; i < LED_COUNT; i++)
@@ -156,6 +158,8 @@ void loop()
             Serial.println(SPI_colors[i].blue);
         }
         Write = false;
+        Serial.println("fin trame");
+        
         //ledStrip.write(colors, LED_COUNT);
         //delayMicroseconds(50);
 
