@@ -42,7 +42,7 @@ ISR (SPI_STC_vect)
     byte c = SPDR;  // grab byte from SPI Data Register
   
     // add to buffer if room
-    if (SPI_color == 0)         {   SPI_colors[SPI_led_number].red = c;     }
+    /*if (SPI_color == 0)         {   SPI_colors[SPI_led_number].red = c;     }
     else if (SPI_color == 1)    {   SPI_colors[SPI_led_number].green = c;   }
     else                        {   SPI_colors[SPI_led_number].blue = c;    }
     
@@ -59,7 +59,10 @@ ISR (SPI_STC_vect)
         Write = true;
         Serial.println("toutes les color received");       
     }
+    
     SPI_Rcv_Time = micros();
+    */
+    Serial.println(c);
 }
 
 void setup()
