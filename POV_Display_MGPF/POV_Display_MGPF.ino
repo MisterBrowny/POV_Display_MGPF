@@ -82,7 +82,7 @@ void setup()
 	// now turn on interrupts
 	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
-	Timer1.initialize(2000);
+	Timer1.initialize(20000);
 	Timer1.attachInterrupt(Control_Stepper);
 }
 
@@ -91,9 +91,9 @@ void loop()
 	unsigned char    i,j;
 	rgb_color color;
 	
-	//if (Write == true)
-	//{
-		//bitClear(SPCR, SPIE);
+	if (Write == true)
+	{
+		bitClear(SPCR, SPIE);
 		//memcpy(data, rcv_data, NB_DATAS);
 		/*for(i = 0; i < NB_DATAS_2; i++)
 		{
@@ -103,10 +103,10 @@ void loop()
 		//bitSet(SPCR, SPIE);
 	//}
 	
-	if (Sector != MemoSector)
-	{
+	//if (Sector != MemoSector)
+	//{
 		//bitClear(SPCR, SPIE);
-		MemoSector = Sector;
+		//MemoSector = Sector;
 
 		// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
 		// 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
@@ -357,10 +357,10 @@ void loop()
             SPI_colors[i] = color;
         }*/
         ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
-		//delay(1);
-		//Cpt = 0;
-		//Write = false;
-		//bitSet(SPCR, SPIE);
+		delay(1);
+		Cpt = 0;
+		Write = false;
+		bitSet(SPCR, SPIE);
 	}
 }
 
