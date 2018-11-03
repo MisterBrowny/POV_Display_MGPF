@@ -359,7 +359,7 @@ void loop()
             SPI_colors[i] = color;
         }*/
         
-		ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
+		//ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		delayMicroseconds(80);
 		bitSet(SPCR, SPIE);
 	}
