@@ -83,7 +83,7 @@ void setup()
 	// now turn on interrupts
 	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
-	memset(data, 20, NB_DATAS);
+	//memset(data, 20, NB_DATAS);
 	
 	//Timer1.initialize(650);
 	//Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
@@ -96,7 +96,7 @@ void loop()
 	if (Write == true)
 	{
 		bitClear(SPCR, SPIE);
-		memcpy(data, rcv_data, NB_DATAS);
+		//memcpy(data, rcv_data, NB_DATAS);
 		Serial.println("début trame");
 		for(i = 0; i < NB_DATAS; i++)
 		{
