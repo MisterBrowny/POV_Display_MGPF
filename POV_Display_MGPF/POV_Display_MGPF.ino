@@ -1,5 +1,6 @@
 #include <EnableInterrupt.h>
 #include <SPI.h>
+#include <TimerOne.h>
 #include "PololuLedStrip.h"
 
 const int stepsPerRevolution = 400;  // number of steps per revolution
@@ -13,68 +14,59 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 #define LED_COUNT 28
 rgb_color colors[LED_COUNT];
 
-unsigned char   Step, Sector, NbTours, MemoNbTours;
-unsigned int    Delay_Inter_Step, Cpt;
-unsigned int    Delay_Inter_Step_Max = 2000;    // delay entre chaque step en µs 
-unsigned int    Delay_Inter_Step_Min = 860;    // delay entre chaque step en µs 
-bool            InitPos;
-
-
-#define         NB_LED_DISPLAY      28
+#define         NB_LED_DISPLAY      161
 #define         NB_BYTE_PAR_LED     3
 #define			NB_DATAS			(NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 
-#define         SPI_TIME_OUT        20 //ms
+bool            Write;
+byte   			Sector, MemoSector, data[NB_DATAS], rcv_data[NB_DATAS];
+unsigned int    Cpt;
 
-unsigned long   SPI_Rcv_Time;
-unsigned char   SPI_led_number, SPI_color, data[28*3], memodata;
-rgb_color       SPI_colors[NB_LED_DISPLAY];
-bool            Write, timeOut;
+ 
+rgb_color       SPI_colors[LED_COUNT];
+
 
 // Définition des interruptions
 void Capteur_Interrupt()
 {
-    InitPos = true;
-    //Sector = 0;
+    Sector = 0;
 }
 
 ISR (SPI_STC_vect)
 {
-    byte c = SPDR;  // grab byte from SPI Data Register
-  	//div_t	temp = div(Cpt,3);
-  	
-    // add to buffer if room
-    /*if (SPI_color == 0)         {   SPI_colors[SPI_led_number].red = c;     }
-    else if (SPI_color == 1)    {   SPI_colors[SPI_led_number].green = c;   }
-    else                        {   SPI_colors[SPI_led_number].blue = c;    }
-    
-    if (++ SPI_color >= NB_BYTE_PAR_LED)    
-    {  
-        SPI_color = 0;
-        SPI_led_number ++;
-        Serial.print("color received : ");
-        Serial.println(SPI_led_number);
-    }
-    if (SPI_led_number >= NB_LED_DISPLAY)   
-    {
-        SPI_led_number = 0;
-        Write = true;
-        Serial.println("toutes les color received");       
-    }
-    
-    SPI_Rcv_Time = micros();
-    */
-    //if (temp.rem == 0) 			{	SPI_colors[temp.quot].red = c;		}
-    //else if (temp.rem == 1) 	{	SPI_colors[temp.quot].green = c;	}
-    //else						{	SPI_colors[temp.quot].blue = c;		}
-    
-    data[Cpt] = c;
+	// Récupére la data dans le buffer de reception
+    rcv_data[Cpt] = SPDR;
+
+    // Fait avancer le moteur
+    /*if (Cpt == 0)			{	digitalWrite(MOT_STEPPER, HIGH);	}
+    else if (Cpt == 25)		{	digitalWrite(MOT_STEPPER, LOW);		}
+    else if (Cpt == 53)		{	digitalWrite(MOT_STEPPER, HIGH);	}
+    else if (Cpt == 78)		{	digitalWrite(MOT_STEPPER, LOW);		}
+    else if (Cpt == 106)	{	digitalWrite(MOT_STEPPER, HIGH);	}
+    else if (Cpt == 131)	{	digitalWrite(MOT_STEPPER, LOW);		}*/
+
+    // Nombre de datas max atteint
     if (++ Cpt >= NB_DATAS)
     { 
     	Cpt = 0;
     	Write = true;
     }
+}
 
+void Control_Stepper(void)
+{
+	if (digitalRead(MOT_STEPPER))
+	{
+		digitalWrite(MOT_STEPPER, LOW);
+	}
+	else
+	{
+		digitalWrite(MOT_STEPPER, HIGH);
+		if (++ Sector >= 100)  
+        {
+            Sector = 0;
+        }
+	}
 }
 
 void setup()
@@ -93,144 +85,280 @@ void setup()
 
     pinMode(MOT_STEPPER, OUTPUT);
 
-    Delay_Inter_Step = Delay_Inter_Step_Max;
-
     // turn on SPI in slave mode
     SPCR |= bit(SPE);
 
     // now turn on interrupts
     SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
+
+    Timer1.initialize(6500);
+  	Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
 }
 
 void loop()
 {   
-	unsigned int    i;
+	unsigned char    i,j;
+	
 	if (Write == true)
     {
     	bitClear(SPCR, SPIE);
-    	
-    	digitalWrite(MOT_STEPPER, HIGH);
-		/*Serial.println("début trame");
+    	Write = false;
+    	memcpy(data, rcv_data, NB_DATAS);
+    	Serial.println("début trame");
 		for(i = 0; i < NB_DATAS; i++)
         {
-        	Serial.println(data[i], DEC);
+        	Serial.println(data[i]);
         }
-        Serial.println("fin trame");*/
-		memcpy(SPI_colors, data, NB_DATAS);
-        // Update the colors buffer.
-        ledStrip.write(SPI_colors, LED_COUNT);
-
-        
-        delay(1);
-        
-        digitalWrite(MOT_STEPPER, LOW);
-        bitSet(SPCR, SPIE);
-        Write = false;
-	}
-    
-	
-    /*if (InitPos == false)
-    {
-        digitalWrite(MOT_STEPPER, HIGH);
-        digitalWrite(MOT_STEPPER, LOW);
-    
-        delayMicroseconds(2000);
-    }
-    else*/
-    //if (Write == true)
-    //{   
-    //    
-        
-        /*unsigned char   temp = Sector % 4;
-        rgb_color color;
-    
-        if (NbTours != MemoNbTours)
-        {
-            MemoNbTours = NbTours;
-            switch (temp)
-            {
-                case 0:
-                {
-                    color.red = 100;
-                    color.green = 100;
-                    color.blue = 100;
-                }
-                break;
-                case 1:
-                {
-                    color.red = 255;
-                    color.green = 0;
-                    color.blue = 0;
-                }
-                break;
-                case 2:
-                {
-                    color.red = 0;
-                    color.green = 255;
-                    color.blue = 0;
-                }
-                break;
-                case 3:
-                {
-                    color.red = 0;
-                    color.green = 0;
-                    color.blue = 255;
-                }
-                break;
-                default:
-                {
-                    color.red = 0;
-                    color.green = 0;
-                    color.blue = 0;
-                }
-                break;
-            }
-            // Update the colors buffer.
-            for(i = 0; i < LED_COUNT; i++)
-            {
-                colors[i] = color;
-            }
-        }*/
-
-        /*Serial.println("début trame");
-        
-        // Update the colors buffer.
-        for(i = 0; i < LED_COUNT; i++)
-        {
-            colors[i] = SPI_colors[i];
-            Serial.print(SPI_colors[i].red);
-            Serial.print(',');
-            Serial.print(SPI_colors[i].green);
-            Serial.print(',');
-            Serial.println(SPI_colors[i].blue);
-        }
-        Write = false;
         Serial.println("fin trame");
-        
-        //ledStrip.write(colors, LED_COUNT);
-        //delayMicroseconds(50);
-		*/
-        
-        /*digitalWrite(MOT_STEPPER, HIGH);
-        
-        if (Delay_Inter_Step)   {   delayMicroseconds(Delay_Inter_Step);   }
-    
-        if (Delay_Inter_Step > Delay_Inter_Step_Min)    {   Delay_Inter_Step --;    }
-        
-        if (++ Sector >= 100)  
-        {
-            Sector = 0;
-            NbTours ++;
-        }
-        
-        digitalWrite(MOT_STEPPER, LOW);*/
-    //}
+    	bitSet(SPCR, SPIE);
+    }
 
-    /*if ((micros() - SPI_Rcv_Time) > SPI_TIME_OUT)
+    if (Sector != MemoSector)
     {
-        SPI_color = 0;
-        SPI_led_number = 0;
-        Serial.println("time out");
-    }*/
+    	//bitClear(SPCR, SPIE);
+    	MemoSector = Sector;
+    	
+    	// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
+		// 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
+		for (i = 0; i < 3; i ++)
+		{
+			if (Sector < 4)				{	j = 0;	}
+			else if (Sector < 7)		{	j = 1;	}
+			else if (Sector < 10)		{	j = 2;	}
+			else if (Sector < 13)		{	j = 3;	}
+			else if (Sector < 16)		{	j = 4;	}
+			else if (Sector < 19)		{	j = 5;	}
+			else if (Sector < 22)		{	j = 6;	}
+			else if (Sector < 25)		{	j = 7;	}
+			else if (Sector < 29)		{	j = 8;	}
+			else if (Sector < 32)		{	j = 9;	}
+			else if (Sector < 35)		{	j = 10;	}
+			else if (Sector < 38)		{	j = 11;	}
+			else if (Sector < 41)		{	j = 12;	}
+			else if (Sector < 44)		{	j = 13;	}
+			else if (Sector < 47)		{	j = 14;	}
+			else if (Sector < 50)		{	j = 15;	}
+			else if (Sector < 54)		{	j = 16;	}
+			else if (Sector < 57)		{	j = 17;	}
+			else if (Sector < 60)		{	j = 18;	}
+			else if (Sector < 63)		{	j = 19;	}
+			else if (Sector < 66)		{	j = 20;	}
+			else if (Sector < 69)		{	j = 21;	}
+			else if (Sector < 72)		{	j = 22;	}
+			else if (Sector < 75)		{	j = 23;	}
+			else if (Sector < 79)		{	j = 24;	}
+			else if (Sector < 82)		{	j = 25;	}
+			else if (Sector < 85)		{	j = 26;	}
+			else if (Sector < 88)		{	j = 27;	}
+			else if (Sector < 91)		{	j = 28;	}
+			else if (Sector < 94)		{	j = 29;	}
+			else if (Sector < 97)		{	j = 30;	}
+			else 						{	j = 31;	}
+			
+			SPI_colors[i].red = data[387 + 3*j];
+			SPI_colors[i].green = data[388 + 3*j];
+    		SPI_colors[i].blue = data[389 + 3*j];
+		}
+
+		// Group7 - led [25-23] - Data[98 - 129] - 32 pixels
+		// 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
+		for (i = 3; i < 6; i ++)
+		{
+			if (Sector < 4)				{	j = 0;	}
+			else if (Sector < 7)		{	j = 1;	}
+			else if (Sector < 10)		{	j = 2;	}
+			else if (Sector < 13)		{	j = 3;	}
+			else if (Sector < 16)		{	j = 4;	}
+			else if (Sector < 19)		{	j = 5;	}
+			else if (Sector < 22)		{	j = 6;	}
+			else if (Sector < 25)		{	j = 7;	}
+			else if (Sector < 29)		{	j = 8;	}
+			else if (Sector < 32)		{	j = 9;	}
+			else if (Sector < 35)		{	j = 10;	}
+			else if (Sector < 38)		{	j = 11;	}
+			else if (Sector < 41)		{	j = 12;	}
+			else if (Sector < 44)		{	j = 13;	}
+			else if (Sector < 47)		{	j = 14;	}
+			else if (Sector < 50)		{	j = 15;	}
+			else if (Sector < 54)		{	j = 16;	}
+			else if (Sector < 57)		{	j = 17;	}
+			else if (Sector < 60)		{	j = 18;	}
+			else if (Sector < 63)		{	j = 19;	}
+			else if (Sector < 66)		{	j = 20;	}
+			else if (Sector < 69)		{	j = 21;	}
+			else if (Sector < 72)		{	j = 22;	}
+			else if (Sector < 75)		{	j = 23;	}
+			else if (Sector < 79)		{	j = 24;	}
+			else if (Sector < 82)		{	j = 25;	}
+			else if (Sector < 85)		{	j = 26;	}
+			else if (Sector < 88)		{	j = 27;	}
+			else if (Sector < 91)		{	j = 28;	}
+			else if (Sector < 94)		{	j = 29;	}
+			else if (Sector < 97)		{	j = 30;	}
+			else 						{	j = 31;	}
+			
+			SPI_colors[i].red = data[291 + 3*j];
+			SPI_colors[i].green = data[292 + 3*j];
+    		SPI_colors[i].blue = data[293 + 3*j];
+		}
+
+		// Group6 - led [22-20] - Data[70 - 97] - 28 pixels
+		// 4 - 3 - 4 - 3 - 4 - 3 - 4 - ...
+		for (i = 6; i < 9; i ++)
+		{
+			if (Sector < 4)				{	j = 0;	}
+			else if (Sector < 7)		{	j = 1;	}
+			else if (Sector < 11)		{	j = 2;	}
+			else if (Sector < 14)		{	j = 3;	}
+			else if (Sector < 18)		{	j = 4;	}
+			else if (Sector < 21)		{	j = 5;	}
+			else if (Sector < 25)		{	j = 6;	}
+			else if (Sector < 29)		{	j = 7;	}
+			else if (Sector < 32)		{	j = 8;	}
+			else if (Sector < 36)		{	j = 9;	}
+			else if (Sector < 39)		{	j = 10;	}
+			else if (Sector < 43)		{	j = 11;	}
+			else if (Sector < 46)		{	j = 12;	}
+			else if (Sector < 50)		{	j = 13;	}
+			else if (Sector < 54)		{	j = 14;	}
+			else if (Sector < 57)		{	j = 15;	}
+			else if (Sector < 61)		{	j = 16;	}
+			else if (Sector < 64)		{	j = 17;	}
+			else if (Sector < 68)		{	j = 18;	}
+			else if (Sector < 71)		{	j = 19;	}
+			else if (Sector < 75)		{	j = 20;	}
+			else if (Sector < 79)		{	j = 21;	}
+			else if (Sector < 82)		{	j = 22;	}
+			else if (Sector < 86)		{	j = 23;	}
+			else if (Sector < 89)		{	j = 24;	}
+			else if (Sector < 93)		{	j = 25;	}
+			else if (Sector < 96)		{	j = 26;	}
+			else 						{	j = 27;	}
+			
+			SPI_colors[i].red = data[207 + 3*j];
+			SPI_colors[i].green = data[208 + 3*j];
+    		SPI_colors[i].blue = data[209 + 3*j];
+		}
+
+		// Group5 - led [19-16] - Data[46 - 69] - 24 pixels
+		// 5 - 4 - 4 - 4 - 4 - 4 - ...
+		for (i = 9; i < 13; i ++)
+		{
+			if (Sector < 5)				{	j = 0;	}
+			else if (Sector < 9)		{	j = 1;	}
+			else if (Sector < 13)		{	j = 2;	}
+			else if (Sector < 17)		{	j = 3;	}
+			else if (Sector < 21)		{	j = 4;	}
+			else if (Sector < 25)		{	j = 5;	}
+			else if (Sector < 30)		{	j = 6;	}
+			else if (Sector < 34)		{	j = 7;	}
+			else if (Sector < 38)		{	j = 8;	}
+			else if (Sector < 42)		{	j = 9;	}
+			else if (Sector < 46)		{	j = 10;	}
+			else if (Sector < 50)		{	j = 11;	}
+			else if (Sector < 55)		{	j = 12;	}
+			else if (Sector < 59)		{	j = 13;	}
+			else if (Sector < 63)		{	j = 14;	}
+			else if (Sector < 67)		{	j = 15;	}
+			else if (Sector < 71)		{	j = 16;	}
+			else if (Sector < 75)		{	j = 17;	}
+			else if (Sector < 79)		{	j = 18;	}
+			else if (Sector < 83)		{	j = 19;	}
+			else if (Sector < 87)		{	j = 20;	}
+			else if (Sector < 91)		{	j = 21;	}
+			else if (Sector < 96)		{	j = 22;	}
+			else 						{	j = 23;	}
+			
+			SPI_colors[i].red = data[135 + 3*j];
+			SPI_colors[i].green = data[136 + 3*j];
+    		SPI_colors[i].blue = data[137 + 3*j];
+		}
+
+		// Group4 - led [15-12] - Data[22 - 45] - 24 pixels
+		// 5 - 4 - 4 - 4 - 4 - 4 - ... 
+		for (i = 13; i < 17; i ++)
+		{
+			if (Sector < 5)				{	j = 0;	}
+			else if (Sector < 9)		{	j = 1;	}
+			else if (Sector < 13)		{	j = 2;	}
+			else if (Sector < 17)		{	j = 3;	}
+			else if (Sector < 21)		{	j = 4;	}
+			else if (Sector < 25)		{	j = 5;	}
+			else if (Sector < 30)		{	j = 6;	}
+			else if (Sector < 34)		{	j = 7;	}
+			else if (Sector < 38)		{	j = 8;	}
+			else if (Sector < 42)		{	j = 9;	}
+			else if (Sector < 46)		{	j = 10;	}
+			else if (Sector < 50)		{	j = 11;	}
+			else if (Sector < 55)		{	j = 12;	}
+			else if (Sector < 59)		{	j = 13;	}
+			else if (Sector < 63)		{	j = 14;	}
+			else if (Sector < 67)		{	j = 15;	}
+			else if (Sector < 71)		{	j = 16;	}
+			else if (Sector < 75)		{	j = 17;	}
+			else if (Sector < 79)		{	j = 18;	}
+			else if (Sector < 83)		{	j = 19;	}
+			else if (Sector < 87)		{	j = 20;	}
+			else if (Sector < 91)		{	j = 21;	}
+			else if (Sector < 96)		{	j = 22;	}
+			else 						{	j = 23;	}
+			
+			SPI_colors[i].red = data[63 + 3*j];
+			SPI_colors[i].green = data[64 + 3*j];
+    		SPI_colors[i].blue = data[65 + 3*j];
+		}
+
+		// Group3 - led [11-08] - Data [10 - 21] - 12 pixels
+		// 8 - 9 - 8 - ...
+		for (i = 17; i < 21; i ++)
+		{
+			if (Sector < 8)				{	j = 0;	}
+			else if (Sector < 17)		{	j = 1;	}
+			else if (Sector < 25)		{	j = 2;	}
+			else if (Sector < 33)		{	j = 3;	}
+			else if (Sector < 42)		{	j = 4;	}
+			else if (Sector < 50)		{	j = 5;	}
+			else if (Sector < 58)		{	j = 6;	}
+			else if (Sector < 67)		{	j = 7;	}
+			else if (Sector < 75)		{	j = 8;	}
+			else if (Sector < 83)		{	j = 9;	}
+			else if (Sector < 92)		{	j = 10;	}
+			else 						{	j = 11;	}
+			
+			SPI_colors[i].red = data[27 + 3*j];
+			SPI_colors[i].green = data[28 + 3*j];
+    		SPI_colors[i].blue = data[29 + 3*j];
+		}
+
+		// Group2 - led [07-04] - Data [2 - 9] - 8 pixels
+		// 12 - 13 - 12 - ...
+		for (i = 21; i < 25; i ++)
+		{
+			if (Sector < 12)			{	j = 0;	}
+			else if (Sector < 25)		{	j = 1;	}
+			else if (Sector < 37)		{	j = 2;	}
+			else if (Sector < 50)		{	j = 3;	}
+			else if (Sector < 62)		{	j = 4;	}
+			else if (Sector < 75)		{	j = 5;	}
+			else if (Sector < 87)		{	j = 6;	}
+			else 						{	j = 7;	}
+			
+			SPI_colors[i].red = data[3 + 3*j];
+			SPI_colors[i].green = data[4 + 3*j];
+    		SPI_colors[i].blue = data[5 + 3*j];
+		}
+
+		// Group1 - led [03-01] - Data [1] - 1 pixel
+		for (i = 25; i < 28; i ++)
+		{
+			SPI_colors[i].red = data[0];
+			SPI_colors[i].green = data[1];
+    		SPI_colors[i].blue = data[2];
+		}
+		    	    	  	    	
+		ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
+		
+       	//bitSet(SPCR, SPIE);
+	}
 }
 
