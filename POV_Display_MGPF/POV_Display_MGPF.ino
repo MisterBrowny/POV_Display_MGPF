@@ -100,7 +100,7 @@ void loop()
 		{
 			Serial.print(data[i]);
 		}
-		Serial.print("fin trame");
+		Serial.println("fin trame");
 		Write = false;
 		bitSet(SPCR, SPIE);
 	}
