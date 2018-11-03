@@ -110,12 +110,12 @@ void loop()
     if (Write == true)
     {
     	digitalWrite(MOT_STEPPER, HIGH);
-		Serial.println("début trame");
+		/*Serial.println("début trame");
 		for(i = 0; i < NB_DATAS; i++)
         {
         	Serial.println(data[i], DEC);
         }
-        Serial.println("fin trame");
+        Serial.println("fin trame");*/
 		memcpy(SPI_colors, data, NB_DATAS);
         // Update the colors buffer.
         ledStrip.write(SPI_colors, LED_COUNT);
