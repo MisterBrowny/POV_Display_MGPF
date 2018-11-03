@@ -14,7 +14,8 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 #define 		LED_COUNT 			28
 #define			NB_LED_DISPLAY		50
 #define			NB_BYTE_PAR_LED		3
-#define			NB_DATAS			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
+#define			NB_DATAS_2			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
+#define			NB_DATAS			483
 
 bool			Write;
 byte			Sector, MemoSector, data[NB_DATAS], rcv_data[NB_DATAS];
@@ -35,7 +36,7 @@ ISR (SPI_STC_vect)
 	rcv_data[Cpt] = SPDR;
 
 	// Nombre de datas max atteint
-	if (++ Cpt >= NB_DATAS)
+	if (++ Cpt >= NB_DATAS_2)
 	{ 
 		Cpt = 0;
 		Write = true;
@@ -94,11 +95,12 @@ void loop()
 	if (Write == true)
 	{
 		bitClear(SPCR, SPIE);
-		memcpy(data, rcv_data, NB_DATAS);
-		for(i = 0; i < 3; i++)
+		memcpy(data, rcv_data, NB_DATAS_2);
+		for(i = 0; i < NB_DATAS_2; i++)
 		{
-			Serial.println(rcv_data[i]);
+			Serial.print(data[i]);
 		}
+		Serial.print("fin trame");
 		Write = false;
 		bitSet(SPCR, SPIE);
 	}
