@@ -37,14 +37,6 @@ ISR (SPI_STC_vect)
 	// Récupére la data dans le buffer de reception
 	rcv_data[Cpt] = SPDR;
 
-	// Fait avancer le moteur
-	/*if (Cpt == 0)			{	digitalWrite(MOT_STEPPER, HIGH);	}
-	else if (Cpt == 25)		{	digitalWrite(MOT_STEPPER, LOW);		}
-	else if (Cpt == 53)		{	digitalWrite(MOT_STEPPER, HIGH);	}
-	else if (Cpt == 78)		{	digitalWrite(MOT_STEPPER, LOW);		}
-	else if (Cpt == 106)	{	digitalWrite(MOT_STEPPER, HIGH);	}
-	else if (Cpt == 131)	{	digitalWrite(MOT_STEPPER, LOW);		}*/
-
 	// Nombre de datas max atteint
 	if (++ Cpt >= NB_DATAS)
 	{ 
@@ -93,8 +85,8 @@ void setup()
 
 	memset(data, 20, NB_DATAS);
 	
-	Timer1.initialize(650);
-	Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
+	//Timer1.initialize(650);
+	//Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
 }
 
 void loop()
