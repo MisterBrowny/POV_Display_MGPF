@@ -32,7 +32,7 @@ void Capteur_Interrupt()
 ISR (SPI_STC_vect)
 {
 	// Récupére la data dans le buffer de reception
-	data[Cpt] = SPDR;
+	rcv_data[Cpt] = SPDR;
 
 	// Nombre de datas max atteint
 	if (++ Cpt >= NB_DATAS)
@@ -91,17 +91,17 @@ void loop()
 	unsigned char    i,j;
 	rgb_color color;
 	
-	//if (Write == true)
-	//{
-		//bitClear(SPCR, SPIE);
-		//memcpy(data, rcv_data, NB_DATAS);
+	if (Write == true)
+	{
+		bitClear(SPCR, SPIE);
+		memcpy(data, rcv_data, NB_DATAS);
 		/*for(i = 0; i < NB_DATAS_2; i++)
 		{
 			Serial.print(rcv_data[i]);
 		}
 		Serial.println("fin trame");*/
-		//bitSet(SPCR, SPIE);
-	//}
+		bitSet(SPCR, SPIE);
+	}
 	
 	if (Sector != MemoSector)
 	{
