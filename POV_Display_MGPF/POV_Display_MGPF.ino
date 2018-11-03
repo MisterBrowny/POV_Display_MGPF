@@ -12,7 +12,7 @@ const int stepsPerRevolution = 400;	// number of steps per revolution
 PololuLedStrip<OUTPUT_COM> ledStrip;
 
 #define 		LED_COUNT 			28
-#define			NB_LED_DISPLAY		28
+#define			NB_LED_DISPLAY		161
 #define			NB_BYTE_PAR_LED		3
 #define			NB_DATAS_2			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 #define			NB_DATAS			483
@@ -358,7 +358,7 @@ void loop()
         {
             SPI_colors[i] = color;
         }*/
-        memcpy(SPI_colors, data, NB_DATAS_2);
+        memcpy(SPI_colors, data, (28 * 3));
 		ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		delay(1);
 		Cpt = 0;
