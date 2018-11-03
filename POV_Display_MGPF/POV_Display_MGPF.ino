@@ -357,7 +357,7 @@ void loop()
         {
             SPI_colors[i] = color;
         }*/
-        memcpy(SPI_colors, data, (3 * 28));
+        memcpy(SPI_colors, data[207], (3 * 28));
         ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		//delay(1);
 		Cpt = 0;
