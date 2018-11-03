@@ -14,8 +14,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 #define 		LED_COUNT 			28
 #define			NB_LED_DISPLAY		161
 #define			NB_BYTE_PAR_LED		3
-#define			NB_DATAS_2			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
-#define			NB_DATAS			483
+#define			NB_DATAS			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 
 bool			Write;
 byte			Sector, MemoSector, data[NB_DATAS], rcv_data[NB_DATAS];
@@ -33,10 +32,10 @@ void Capteur_Interrupt()
 ISR (SPI_STC_vect)
 {
 	// Récupére la data dans le buffer de reception
-	rcv_data[Cpt] = SPDR;
+	data[Cpt] = SPDR;
 
 	// Nombre de datas max atteint
-	if (++ Cpt >= NB_DATAS_2)
+	if (++ Cpt >= NB_DATAS)
 	{ 
 		Cpt = 0;
 		Write = true;
@@ -75,7 +74,7 @@ void setup()
 
 	pinMode(MOT_STEPPER, OUTPUT);
 
-	memset(data, 1, NB_DATAS_2);
+	memset(data, 1, NB_DATAS);
 	
 	// turn on SPI in slave mode
 	SPCR |= bit(SPE);
@@ -95,7 +94,7 @@ void loop()
 	if (Write == true)
 	{
 		bitClear(SPCR, SPIE);
-		memcpy(data, rcv_data, NB_DATAS_2);
+		//memcpy(data, rcv_data, NB_DATAS_2);
 		/*for(i = 0; i < NB_DATAS_2; i++)
 		{
 			Serial.print(rcv_data[i]);
