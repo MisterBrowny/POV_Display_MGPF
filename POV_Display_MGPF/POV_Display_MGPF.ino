@@ -109,7 +109,7 @@ void loop()
 		Serial.println("début trame");
 		for(i = 0; i < NB_DATAS; i++)
 		{
-			Serial.println(data[i]);
+			Serial.print(data[i]);
 		}
 		Serial.println("fin trame");
 		bitSet(SPCR, SPIE);
