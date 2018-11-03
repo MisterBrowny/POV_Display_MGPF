@@ -17,7 +17,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 #define			NB_DATAS			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 
 bool			Write;
-byte			Sector, MemoSector, data[NB_DATAS];
+byte			Sector, MemoSector, data[NB_DATAS], rcv_data[NB_DATAS];
 unsigned int	Cpt;
 
 rgb_color		SPI_colors[LED_COUNT];
@@ -32,7 +32,7 @@ void Capteur_Interrupt()
 ISR (SPI_STC_vect)
 {
 	// Récupére la data dans le buffer de reception
-	data[Cpt] = SPDR;
+	rcv_data[Cpt] = SPDR;
 
 	// Nombre de datas max atteint
 	if (++ Cpt >= NB_DATAS)
@@ -51,7 +51,7 @@ void Control_Stepper(void)
 	else
 	{
 		digitalWrite(MOT_STEPPER, HIGH);
-		//if (++ Sector >= 100)  
+		if (++ Sector >= 100)  
 		{
 			Sector = 0;
 		}
@@ -93,20 +93,19 @@ void loop()
 	
 	if (Write == true)
 	{
-		//bitClear(SPCR, SPIE);
-		//memcpy(data, rcv_data, NB_DATAS_2);
+		bitClear(SPCR, SPIE);
+		memcpy(data, rcv_data, NB_DATAS_2);
 		/*for(i = 0; i < NB_DATAS_2; i++)
 		{
 			Serial.print(rcv_data[i]);
 		}
 		Serial.println("fin trame");*/
-		
-		//bitSet(SPCR, SPIE);
-	//}
+		bitSet(SPCR, SPIE);
+	}
 	
-	//if (Sector != MemoSector)
-	//{
-		//bitClear(SPCR, SPIE);
+	if (Sector != MemoSector)
+	{
+		bitClear(SPCR, SPIE);
 		MemoSector = Sector;
 
 		// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
@@ -357,12 +356,11 @@ void loop()
         {
             SPI_colors[i] = color;
         }*/
-        memcpy(SPI_colors, data[207], (3 * 28));
         ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		//delay(1);
 		Cpt = 0;
 		Write = false;
-		//bitSet(SPCR, SPIE);
+		bitSet(SPCR, SPIE);
 	}
 }
 
