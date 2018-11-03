@@ -107,7 +107,7 @@ void loop()
 	
 	if (Sector != MemoSector)
 	{
-		bitClear(SPCR, SPIE);
+		//bitClear(SPCR, SPIE);
 		MemoSector = Sector;
 
 		// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
@@ -360,8 +360,8 @@ void loop()
         }*/
         
 		//ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
-		delayMicroseconds(80);
-		bitSet(SPCR, SPIE);
+		//delayMicroseconds(80);
+		//bitSet(SPCR, SPIE);
 	}
 }
 
