@@ -75,13 +75,13 @@ void setup()
 	pinMode(MOT_STEPPER, OUTPUT);
 
 	// turn on SPI in slave mode
-	SPCR |= bit(SPE);
+	//SPCR |= bit(SPE);
 
 	// now turn on interrupts
-	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
+	//SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
-	Timer1.initialize(1000);
-	Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
+	//Timer1.initialize(1000);
+	//Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
 }
 
 void loop()
@@ -100,7 +100,7 @@ void loop()
 		bitSet(SPCR, SPIE);
 	}*/
 	
-	if (Sector != MemoSector)
+	//if (Sector != MemoSector)
 	{
 		//bitClear(SPCR, SPIE);
 		MemoSector = Sector;
