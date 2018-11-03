@@ -12,7 +12,7 @@ const int stepsPerRevolution = 400;	// number of steps per revolution
 PololuLedStrip<OUTPUT_COM> ledStrip;
 
 #define 		LED_COUNT 			28
-#define			NB_LED_DISPLAY		50
+#define			NB_LED_DISPLAY		28
 #define			NB_BYTE_PAR_LED		3
 #define			NB_DATAS_2			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 #define			NB_DATAS			483
@@ -75,7 +75,7 @@ void setup()
 
 	pinMode(MOT_STEPPER, OUTPUT);
 
-	memset(data, 1, NB_DATAS);
+	memset(data, 1, NB_DATAS_2);
 	
 	// turn on SPI in slave mode
 	SPCR |= bit(SPE);
@@ -110,7 +110,7 @@ void loop()
 		bitClear(SPCR, SPIE);
 		MemoSector = Sector;
 
-		// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
+		/*// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
 		// 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
 		for (i = 0; i < 3; i ++)
 		{
@@ -347,7 +347,7 @@ void loop()
 			SPI_colors[i].green = data[1];
 			SPI_colors[i].blue = data[2];
 		}
-		
+		*/
 		/*
 		// Test leds
 		color.red = 0;
@@ -358,7 +358,7 @@ void loop()
         {
             SPI_colors[i] = color;
         }*/
-        
+        memcpy(SPI_colors, data, NB_DATAS_2);
 		ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		delay(1);
 		bitSet(SPCR, SPIE);
