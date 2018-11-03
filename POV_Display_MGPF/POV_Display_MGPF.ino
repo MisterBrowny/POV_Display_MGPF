@@ -107,6 +107,7 @@ void setup()
 void loop()
 {   
 	unsigned int    i;
+	unsigned long	temps = millis();
 	
     if (Write == true)
     {
@@ -128,7 +129,7 @@ void loop()
 	}
     else if (timeOut == false)
 	{
-		if ((millis() - SPI_Rcv_Time) > SPI_TIME_OUT)
+		if ((temps - SPI_Rcv_Time) > SPI_TIME_OUT)
 		{
 	        if (Cpt != 0)
 	        {
