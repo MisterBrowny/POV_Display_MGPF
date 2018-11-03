@@ -97,7 +97,7 @@ void loop()
 		memcpy(data, rcv_data, NB_DATAS);
 		for(i = 0; i < 3; i++)
 		{
-			Serial.print(data[i]);
+			Serial.print(rcv_data[i]);
 		}
 		Write = false;
 		bitSet(SPCR, SPIE);
