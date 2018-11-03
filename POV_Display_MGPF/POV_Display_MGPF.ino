@@ -96,11 +96,11 @@ void loop()
 	if (Write == true)
 	{
 		bitClear(SPCR, SPIE);
-		//memcpy(data, rcv_data, NB_DATAS);
+		memcpy(data, rcv_data, NB_DATAS);
 		Serial.println("début trame");
-		for(i = 0; i < NB_DATAS; i++)
+		for(i = 0; i < 10; i++)
 		{
-			Serial.print(rcv_data[i]);
+			Serial.print(data[i]);
 		}
 		Serial.println("fin trame");
 		Write = false;
