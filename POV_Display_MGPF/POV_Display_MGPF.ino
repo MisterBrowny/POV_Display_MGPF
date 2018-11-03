@@ -3,54 +3,54 @@
 #include <TimerOne.h>
 #include "PololuLedStrip.h"
 
-const int stepsPerRevolution = 400;  // number of steps per revolution
+const int stepsPerRevolution = 400;	// number of steps per revolution
 
-#define INPUT_CAPTEUR   8
-#define OUTPUT_COM      7
-#define MOT_STEPPER     5
+#define INPUT_CAPTEUR	8
+#define OUTPUT_COM		7
+#define MOT_STEPPER		5
 
 PololuLedStrip<OUTPUT_COM> ledStrip;
 
 #define LED_COUNT 28
 rgb_color colors[LED_COUNT];
 
-#define         NB_LED_DISPLAY      161
-#define         NB_BYTE_PAR_LED     3
+#define			NB_LED_DISPLAY		161
+#define			NB_BYTE_PAR_LED		3
 #define			NB_DATAS			(NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 
-bool            Write;
-byte   			Sector, MemoSector, data[NB_DATAS], rcv_data[NB_DATAS];
-unsigned int    Cpt;
+bool			Write;
+byte			Sector, MemoSector, data[NB_DATAS], rcv_data[NB_DATAS];
+unsigned int	Cpt;
 
  
-rgb_color       SPI_colors[LED_COUNT];
+rgb_color		SPI_colors[LED_COUNT];
 
 
 // Définition des interruptions
 void Capteur_Interrupt()
 {
-    Sector = 0;
+	Sector = 0;
 }
 
 ISR (SPI_STC_vect)
 {
 	// Récupére la data dans le buffer de reception
-    rcv_data[Cpt] = SPDR;
+	rcv_data[Cpt] = SPDR;
 
-    // Fait avancer le moteur
-    /*if (Cpt == 0)			{	digitalWrite(MOT_STEPPER, HIGH);	}
-    else if (Cpt == 25)		{	digitalWrite(MOT_STEPPER, LOW);		}
-    else if (Cpt == 53)		{	digitalWrite(MOT_STEPPER, HIGH);	}
-    else if (Cpt == 78)		{	digitalWrite(MOT_STEPPER, LOW);		}
-    else if (Cpt == 106)	{	digitalWrite(MOT_STEPPER, HIGH);	}
-    else if (Cpt == 131)	{	digitalWrite(MOT_STEPPER, LOW);		}*/
+	// Fait avancer le moteur
+	/*if (Cpt == 0)			{	digitalWrite(MOT_STEPPER, HIGH);	}
+	else if (Cpt == 25)		{	digitalWrite(MOT_STEPPER, LOW);		}
+	else if (Cpt == 53)		{	digitalWrite(MOT_STEPPER, HIGH);	}
+	else if (Cpt == 78)		{	digitalWrite(MOT_STEPPER, LOW);		}
+	else if (Cpt == 106)	{	digitalWrite(MOT_STEPPER, HIGH);	}
+	else if (Cpt == 131)	{	digitalWrite(MOT_STEPPER, LOW);		}*/
 
-    // Nombre de datas max atteint
-    if (++ Cpt >= NB_DATAS)
-    { 
-    	Cpt = 0;
-    	Write = true;
-    }
+	// Nombre de datas max atteint
+	if (++ Cpt >= NB_DATAS)
+	{ 
+		Cpt = 0;
+		Write = true;
+	}
 }
 
 void Control_Stepper(void)
@@ -63,36 +63,36 @@ void Control_Stepper(void)
 	{
 		digitalWrite(MOT_STEPPER, HIGH);
 		if (++ Sector >= 100)  
-        {
-            Sector = 0;
-        }
+		{
+			Sector = 0;
+		}
 	}
 }
 
 void setup()
 {
-    // Configure inputs
-    pinMode(INPUT_CAPTEUR, INPUT);
+	// Configure inputs
+	pinMode(INPUT_CAPTEUR, INPUT);
 
-    // Configure outputs
-    pinMode(OUTPUT_COM, OUTPUT);
+	// Configure outputs
+	pinMode(OUTPUT_COM, OUTPUT);
 
-    // Initialise la liaison série à 115200 bauds
-    Serial.begin(115200);
+	// Initialise la liaison série à 115200 bauds
+	Serial.begin(115200);
 
-    // Configure interruptions
-    enableInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, FALLING);
+	// Configure interruptions
+	enableInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, FALLING);
 
-    pinMode(MOT_STEPPER, OUTPUT);
+	pinMode(MOT_STEPPER, OUTPUT);
 
-    // turn on SPI in slave mode
-    SPCR |= bit(SPE);
+	// turn on SPI in slave mode
+	SPCR |= bit(SPE);
 
-    // now turn on interrupts
-    SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
+	// now turn on interrupts
+	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
-    Timer1.initialize(6500);
-  	Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
+	Timer1.initialize(650);
+	Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
 }
 
 void loop()
@@ -100,25 +100,25 @@ void loop()
 	unsigned char    i,j;
 	
 	if (Write == true)
-    {
-    	bitClear(SPCR, SPIE);
-    	Write = false;
-    	memcpy(data, rcv_data, NB_DATAS);
-    	/*Serial.println("début trame");
+	{
+		bitClear(SPCR, SPIE);
+		Write = false;
+		memcpy(data, rcv_data, NB_DATAS);
+		/*Serial.println("début trame");
 		for(i = 0; i < NB_DATAS; i++)
-        {
-        	Serial.println(data[i]);
-        }
-        Serial.println("fin trame");*/
-    	bitSet(SPCR, SPIE);
-    }
+		{
+			Serial.println(data[i]);
+		}
+		Serial.println("fin trame");*/
+		bitSet(SPCR, SPIE);
+	}
 
-    if (Sector != MemoSector)
-    {
-    	//bitClear(SPCR, SPIE);
-    	MemoSector = Sector;
-    	
-    	// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
+	if (Sector != MemoSector)
+	{
+		//bitClear(SPCR, SPIE);
+		MemoSector = Sector;
+		
+		// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
 		// 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
 		for (i = 0; i < 3; i ++)
 		{
@@ -157,7 +157,7 @@ void loop()
 			
 			SPI_colors[i].red = data[387 + 3*j];
 			SPI_colors[i].green = data[388 + 3*j];
-    		SPI_colors[i].blue = data[389 + 3*j];
+			SPI_colors[i].blue = data[389 + 3*j];
 		}
 
 		// Group7 - led [25-23] - Data[98 - 129] - 32 pixels
@@ -199,7 +199,7 @@ void loop()
 			
 			SPI_colors[i].red = data[291 + 3*j];
 			SPI_colors[i].green = data[292 + 3*j];
-    		SPI_colors[i].blue = data[293 + 3*j];
+			SPI_colors[i].blue = data[293 + 3*j];
 		}
 
 		// Group6 - led [22-20] - Data[70 - 97] - 28 pixels
@@ -237,7 +237,7 @@ void loop()
 			
 			SPI_colors[i].red = data[207 + 3*j];
 			SPI_colors[i].green = data[208 + 3*j];
-    		SPI_colors[i].blue = data[209 + 3*j];
+			SPI_colors[i].blue = data[209 + 3*j];
 		}
 
 		// Group5 - led [19-16] - Data[46 - 69] - 24 pixels
@@ -271,7 +271,7 @@ void loop()
 			
 			SPI_colors[i].red = data[135 + 3*j];
 			SPI_colors[i].green = data[136 + 3*j];
-    		SPI_colors[i].blue = data[137 + 3*j];
+			SPI_colors[i].blue = data[137 + 3*j];
 		}
 
 		// Group4 - led [15-12] - Data[22 - 45] - 24 pixels
@@ -305,7 +305,7 @@ void loop()
 			
 			SPI_colors[i].red = data[63 + 3*j];
 			SPI_colors[i].green = data[64 + 3*j];
-    		SPI_colors[i].blue = data[65 + 3*j];
+			SPI_colors[i].blue = data[65 + 3*j];
 		}
 
 		// Group3 - led [11-08] - Data [10 - 21] - 12 pixels
@@ -327,7 +327,7 @@ void loop()
 			
 			SPI_colors[i].red = data[27 + 3*j];
 			SPI_colors[i].green = data[28 + 3*j];
-    		SPI_colors[i].blue = data[29 + 3*j];
+			SPI_colors[i].blue = data[29 + 3*j];
 		}
 
 		// Group2 - led [07-04] - Data [2 - 9] - 8 pixels
@@ -345,7 +345,7 @@ void loop()
 			
 			SPI_colors[i].red = data[3 + 3*j];
 			SPI_colors[i].green = data[4 + 3*j];
-    		SPI_colors[i].blue = data[5 + 3*j];
+			SPI_colors[i].blue = data[5 + 3*j];
 		}
 
 		// Group1 - led [03-01] - Data [1] - 1 pixel
@@ -353,12 +353,12 @@ void loop()
 		{
 			SPI_colors[i].red = data[0];
 			SPI_colors[i].green = data[1];
-    		SPI_colors[i].blue = data[2];
+			SPI_colors[i].blue = data[2];
 		}
-		    	    	  	    	
+		
 		ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		
-       	//bitSet(SPCR, SPIE);
+		//bitSet(SPCR, SPIE);
 	}
 }
 
