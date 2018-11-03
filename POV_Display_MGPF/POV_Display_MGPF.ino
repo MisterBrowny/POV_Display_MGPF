@@ -12,7 +12,7 @@ const int stepsPerRevolution = 400;	// number of steps per revolution
 PololuLedStrip<OUTPUT_COM> ledStrip;
 
 #define 		LED_COUNT 			28
-#define			NB_LED_DISPLAY		161
+#define			NB_LED_DISPLAY		50
 #define			NB_BYTE_PAR_LED		3
 #define			NB_DATAS			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 
@@ -91,7 +91,7 @@ void loop()
 	unsigned char    i,j;
 	rgb_color color;
 	
-	/*if (Write == true)
+	if (Write == true)
 	{
 		bitClear(SPCR, SPIE);
 		memcpy(data, rcv_data, NB_DATAS);
@@ -101,7 +101,7 @@ void loop()
 		}
 		Write = false;
 		bitSet(SPCR, SPIE);
-	}*/
+	}
 	
 	if (Sector != MemoSector)
 	{
