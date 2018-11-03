@@ -58,12 +58,10 @@ void Control_Stepper(void)
 	if (digitalRead(MOT_STEPPER))
 	{
 		digitalWrite(MOT_STEPPER, LOW);
-		digitalWrite(OUTPUT_COM, LOW);
 	}
 	else
 	{
 		digitalWrite(MOT_STEPPER, HIGH);
-		digitalWrite(OUTPUT_COM, HIGH);
 		if (++ Sector >= 100)  
 		{
 			Sector = 0;
@@ -93,6 +91,8 @@ void setup()
 	// now turn on interrupts
 	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
+	memset(data, 20, NB_DATAS);
+	
 	Timer1.initialize(650);
 	Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
 }
@@ -115,7 +115,7 @@ void loop()
 		bitSet(SPCR, SPIE);
 	}
 
-	if (Sector != MemoSector)
+	/*if (Sector != MemoSector)
 	{
 		bitClear(SPCR, SPIE);
 		MemoSector = Sector;
@@ -361,6 +361,6 @@ void loop()
 		ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		
 		bitSet(SPCR, SPIE);
-	}
+	}*/
 }
 
