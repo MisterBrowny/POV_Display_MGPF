@@ -83,8 +83,8 @@ void setup()
 	// now turn on interrupts
 	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
-	Timer1.initialize(2000);
-	Timer1.attachInterrupt(Control_Stepper);
+	//Timer1.initialize(2000);
+	//Timer1.attachInterrupt(Control_Stepper);
 }
 
 void loop()
@@ -96,11 +96,11 @@ void loop()
 	{
 		bitClear(SPCR, SPIE);
 		memcpy(data, rcv_data, NB_DATAS_2);
-		/*for(i = 0; i < NB_DATAS_2; i++)
+		for(i = 0; i < NB_DATAS_2; i++)
 		{
 			Serial.print(data[i]);
 		}
-		Serial.println("fin trame");*/
+		Serial.println("fin trame");
 		Write = false;
 		//bitSet(SPCR, SPIE);
 	//}
@@ -358,9 +358,9 @@ void loop()
         {
             SPI_colors[i] = color;
         }*/
-        memcpy(SPI_colors, data, (28 * 3));
-		ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
-		delay(1);
+        //memcpy(SPI_colors, data, (28 * 3));
+		//ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
+		//delay(1);
 		Cpt = 0;
 		bitSet(SPCR, SPIE);
 	}
