@@ -102,12 +102,12 @@ void loop()
 		}
 		Serial.println("fin trame");*/
 		Write = false;
-		bitSet(SPCR, SPIE);
-	}
+		//bitSet(SPCR, SPIE);
+	//}
 	
-	if (Sector != MemoSector)
-	{
-		bitClear(SPCR, SPIE);
+	//if (Sector != MemoSector)
+	//{
+		//bitClear(SPCR, SPIE);
 		MemoSector = Sector;
 
 		/*// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
