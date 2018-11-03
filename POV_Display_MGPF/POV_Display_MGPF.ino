@@ -105,9 +105,7 @@ void setup()
 void loop()
 {   
 	unsigned int    i;
-	unsigned long	temps = millis();
-	
-    if (Write == true)
+	if (Write == true)
     {
     	bitClear(SPCR, SPIE);
     	
@@ -123,7 +121,7 @@ void loop()
         ledStrip.write(SPI_colors, LED_COUNT);
 
         
-        delay(10);
+        delay(1);
         
         digitalWrite(MOT_STEPPER, LOW);
         bitSet(SPCR, SPIE);
