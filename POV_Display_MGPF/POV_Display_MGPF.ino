@@ -93,7 +93,7 @@ void loop()
 {   
 	unsigned char    i,j;
 	
-	if (Write == true)
+	/*if (Write == true)
 	{
 		bitClear(SPCR, SPIE);
 		memcpy(data, rcv_data, NB_DATAS);
@@ -103,7 +103,7 @@ void loop()
 		}
 		Write = false;
 		bitSet(SPCR, SPIE);
-	}
+	}*/
 
 	if (Sector != MemoSector)
 	{
