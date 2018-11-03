@@ -132,9 +132,11 @@ void loop()
 		{
 	        if (Cpt != 0)
 	        {
+	        	Serial.print("time out :");
+	        	Serial.println(Cpt);
 	        	Cpt = 0;
 	        	timeOut = true;
-	        	Serial.println("time out");
+	        	
 	        }
 	    }
 	}
