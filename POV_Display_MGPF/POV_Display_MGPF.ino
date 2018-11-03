@@ -75,8 +75,6 @@ ISR (SPI_STC_vect)
     	Write = true;
     }
 
-    SPI_Rcv_Time = millis();
-    timeOut = false;
 }
 
 void setup()
@@ -111,6 +109,8 @@ void loop()
 	
     if (Write == true)
     {
+    	bitClear(SPCR, SPIE);
+    	
     	digitalWrite(MOT_STEPPER, HIGH);
 		/*Serial.println("début trame");
 		for(i = 0; i < NB_DATAS; i++)
@@ -121,26 +121,15 @@ void loop()
 		memcpy(SPI_colors, data, NB_DATAS);
         // Update the colors buffer.
         ledStrip.write(SPI_colors, LED_COUNT);
+
         
-        delayMicroseconds(50);
+        delay(10);
         
         digitalWrite(MOT_STEPPER, LOW);
+        bitSet(SPCR, SPIE);
         Write = false;
 	}
-    else if (timeOut == false)
-	{
-		if ((temps - SPI_Rcv_Time) > SPI_TIME_OUT)
-		{
-	        if (Cpt != 0)
-	        {
-	        	Serial.print("time out :");
-	        	Serial.println(Cpt);
-	        	Cpt = 0;
-	        	timeOut = true;
-	        	
-	        }
-	    }
-	}
+    
 	
     /*if (InitPos == false)
     {
