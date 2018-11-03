@@ -1,6 +1,6 @@
 #include <EnableInterrupt.h>
 #include <SPI.h>
-//#include <TimerOne.h>
+#include <TimerOne.h>
 #include "PololuLedStrip.h"
 
 const int stepsPerRevolution = 400;	// number of steps per revolution
@@ -75,13 +75,13 @@ void setup()
 	pinMode(MOT_STEPPER, OUTPUT);
 
 	// turn on SPI in slave mode
-	//SPCR |= bit(SPE);
+	SPCR |= bit(SPE);
 
 	// now turn on interrupts
-	//SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
+	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
-	//Timer1.initialize(1000);
-	//Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
+	Timer1.initialize(1000);
+	Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
 }
 
 void loop()
@@ -100,19 +100,12 @@ void loop()
 		bitSet(SPCR, SPIE);
 	}*/
 	
-	//if (Sector != MemoSector)
+	if (Sector != MemoSector)
 	{
 		//bitClear(SPCR, SPIE);
 		MemoSector = Sector;
 
-		color.red = 0;
-		color.green = 0;
-		color.blue = 255;
 		
-		for(i = 0; i < LED_COUNT; i++)
-        {
-            SPI_colors[i] = color;
-        }
         
 		/*// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
 		// 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
@@ -352,6 +345,16 @@ void loop()
 			SPI_colors[i].blue = data[2];
 		}
 		*/
+		
+		// Test leds
+		color.red = 0;
+		color.green = 0;
+		color.blue = 255;
+		
+		for(i = 0; i < LED_COUNT; i++)
+        {
+            SPI_colors[i] = color;
+        }
 		ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		delayMicroseconds(80);
 		//bitSet(SPCR, SPIE);
