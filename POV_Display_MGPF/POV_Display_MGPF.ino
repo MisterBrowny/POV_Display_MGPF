@@ -91,8 +91,8 @@ void loop()
 	unsigned char    i,j;
 	rgb_color color;
 	
-	if (Write == true)
-	{
+	//if (Write == true)
+	//{
 		//bitClear(SPCR, SPIE);
 		//memcpy(data, rcv_data, NB_DATAS);
 		/*for(i = 0; i < NB_DATAS_2; i++)
@@ -103,8 +103,8 @@ void loop()
 		//bitSet(SPCR, SPIE);
 	//}
 	
-	//if (Sector != MemoSector)
-	//{
+	if (Sector != MemoSector)
+	{
 		//bitClear(SPCR, SPIE);
 		MemoSector = Sector;
 
@@ -358,8 +358,8 @@ void loop()
         }*/
         ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		//delay(1);
-		Cpt = 0;
-		Write = false;
+		//Cpt = 0;
+		//Write = false;
 		//bitSet(SPCR, SPIE);
 	}
 }
