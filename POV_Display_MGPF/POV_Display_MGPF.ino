@@ -17,7 +17,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 #define			NB_DATAS			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 
 bool			Write;
-byte			Sector, MemoSector, data[NB_DATAS], rcv_data[NB_DATAS];
+byte			Sector, MemoSector, data[NB_DATAS];
 unsigned int	Cpt;
 
 rgb_color		SPI_colors[LED_COUNT];
@@ -93,7 +93,7 @@ void loop()
 	
 	if (Write == true)
 	{
-		bitClear(SPCR, SPIE);
+		//bitClear(SPCR, SPIE);
 		//memcpy(data, rcv_data, NB_DATAS_2);
 		/*for(i = 0; i < NB_DATAS_2; i++)
 		{
@@ -362,7 +362,7 @@ void loop()
 		//delay(1);
 		Cpt = 0;
 		Write = false;
-		bitSet(SPCR, SPIE);
+		//bitSet(SPCR, SPIE);
 	}
 }
 
