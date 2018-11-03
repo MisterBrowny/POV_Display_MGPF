@@ -29,7 +29,7 @@ bool            InitPos;
 unsigned long   SPI_Rcv_Time;
 unsigned char   SPI_led_number, SPI_color, data[28*3], memodata;
 rgb_color       SPI_colors[NB_LED_DISPLAY];
-bool            Write;
+bool            Write, timeOut;
 
 // Définition des interruptions
 void Capteur_Interrupt()
@@ -76,6 +76,7 @@ ISR (SPI_STC_vect)
     }
 
     SPI_Rcv_Time = millis();
+    timeOut = false;
 }
 
 void setup()
@@ -122,17 +123,22 @@ void loop()
         
         delayMicroseconds(50);
         
+        digitalWrite(MOT_STEPPER, LOW);
         Write = false;
-		digitalWrite(MOT_STEPPER, LOW);
-    }
-    else if ((millis() - SPI_Rcv_Time) > SPI_TIME_OUT)
-    {
-        if (Cpt != 0)
-        {
-        	Cpt = 0;
-        	Serial.println("time out");
-        }
-    }
+	}
+    else if (timeOut == false)
+	{
+		if ((millis() - SPI_Rcv_Time) > SPI_TIME_OUT)
+		{
+	        if (Cpt != 0)
+	        {
+	        	Cpt = 0;
+	        	timeOut = true;
+	        	Serial.println("time out");
+	        }
+	    }
+	}
+	
     /*if (InitPos == false)
     {
         digitalWrite(MOT_STEPPER, HIGH);
