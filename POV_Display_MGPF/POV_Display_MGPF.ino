@@ -14,7 +14,7 @@ PololuLedStrip<OUTPUT_COM> ledStrip;
 #define LED_COUNT 28
 rgb_color colors[LED_COUNT];
 
-#define			NB_LED_DISPLAY		161
+#define			NB_LED_DISPLAY		2
 #define			NB_BYTE_PAR_LED		3
 #define			NB_DATAS			(NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 
