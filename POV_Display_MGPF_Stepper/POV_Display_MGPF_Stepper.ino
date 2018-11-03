@@ -10,7 +10,7 @@
 unsigned int    Value;
 unsigned int    Value1 = 50;
 unsigned int    Value_Max = 2000;
-unsigned int    Value_Min = 275;
+unsigned int    Value_Min = 450;
 bool            Top = false;
 
 void Capteur_Interrupt()

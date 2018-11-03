@@ -85,7 +85,7 @@ void setup()
 
 	memset(data, 20, NB_DATAS);
 	
-	Timer1.initialize(650);
+	Timer1.initialize(1000);
 	Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
 }
 
