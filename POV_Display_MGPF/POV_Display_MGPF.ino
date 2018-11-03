@@ -96,11 +96,11 @@ void loop()
 	{
 		bitClear(SPCR, SPIE);
 		memcpy(data, rcv_data, NB_DATAS_2);
-		for(i = 0; i < NB_DATAS_2; i++)
+		/*for(i = 0; i < NB_DATAS_2; i++)
 		{
 			Serial.print(data[i]);
 		}
-		Serial.println("fin trame");
+		Serial.println("fin trame");*/
 		Write = false;
 		bitSet(SPCR, SPIE);
 	}
