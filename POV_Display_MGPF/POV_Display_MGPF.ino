@@ -80,7 +80,11 @@ void setup()
 	// now turn on interrupts
 	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
-	memset(data, 20, NB_DATAS);
+	memset(data, 1, NB_DATAS);
+
+	data[0] = 0;
+	data[1] = 0;
+	data[2] = 255;
 	
 	Timer1.initialize(1000);
 	Timer1.attachInterrupt(Control_Stepper); // blinkLED to run every 0.15 seconds
