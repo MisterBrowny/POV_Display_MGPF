@@ -104,14 +104,14 @@ void loop()
 	if (Write == true)
 	{
 		bitClear(SPCR, SPIE);
-		Write = false;
 		memcpy(data, rcv_data, NB_DATAS);
 		Serial.println("début trame");
 		for(i = 0; i < NB_DATAS; i++)
 		{
-			Serial.print(data[i]);
+			Serial.print(rcv_data[i]);
 		}
 		Serial.println("fin trame");
+		Write = false;
 		bitSet(SPCR, SPIE);
 	}
 
