@@ -32,7 +32,7 @@ void Capteur_Interrupt()
 ISR (SPI_STC_vect)
 {
 	// Récupére la data dans le buffer de reception
-	rcv_data[Cpt] = SPDR;
+	data[Cpt] = SPDR;
 
 	// Nombre de datas max atteint
 	if (++ Cpt >= NB_DATAS)
@@ -93,19 +93,19 @@ void loop()
 	
 	if (Write == true)
 	{
-		bitClear(SPCR, SPIE);
-		memcpy(data, rcv_data, NB_DATAS);
+		//bitClear(SPCR, SPIE);
+		//memcpy(data, rcv_data, NB_DATAS);
 		/*for(i = 0; i < NB_DATAS_2; i++)
 		{
 			Serial.print(rcv_data[i]);
 		}
 		Serial.println("fin trame");*/
-		bitSet(SPCR, SPIE);
-	}
+		//bitSet(SPCR, SPIE);
+	//}
 	
-	if (Sector != MemoSector)
-	{
-		bitClear(SPCR, SPIE);
+	//if (Sector != MemoSector)
+	//{
+		//bitClear(SPCR, SPIE);
 		MemoSector = Sector;
 
 		// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
@@ -360,7 +360,7 @@ void loop()
 		//delay(1);
 		Cpt = 0;
 		Write = false;
-		bitSet(SPCR, SPIE);
+		//bitSet(SPCR, SPIE);
 	}
 }
 
