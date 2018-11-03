@@ -1,6 +1,6 @@
 #include <EnableInterrupt.h>
 #include <SPI.h>
-#include <TimerOne.h>
+//#include <TimerOne.h>
 #include "PololuLedStrip.h"
 
 const int stepsPerRevolution = 400;	// number of steps per revolution
