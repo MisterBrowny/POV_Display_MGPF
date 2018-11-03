@@ -8,9 +8,9 @@
 //Stepper stepper(stepsPerRevolution, 2, 3, 4, 5);
 
 unsigned int    Value;
-unsigned int    Value1 = 50;
+unsigned int    Value1 = 100;
 unsigned int    Value_Max = 2000;
-unsigned int    Value_Min = 450;
+unsigned int    Value_Min = 900;
 bool            Top = false;
 
 void Capteur_Interrupt()
