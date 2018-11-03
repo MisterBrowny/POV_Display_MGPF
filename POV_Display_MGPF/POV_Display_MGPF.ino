@@ -51,7 +51,7 @@ void Control_Stepper(void)
 	else
 	{
 		digitalWrite(MOT_STEPPER, HIGH);
-		if (++ Sector >= 100)  
+		//if (++ Sector >= 100)  
 		{
 			Sector = 0;
 		}
