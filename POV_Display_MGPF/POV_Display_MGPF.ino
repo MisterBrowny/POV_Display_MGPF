@@ -83,7 +83,7 @@ void setup()
 	// now turn on interrupts
 	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
-	Timer1.initialize(10000);
+	Timer1.initialize(2000);
 	Timer1.attachInterrupt(Control_Stepper);
 }
 
@@ -361,6 +361,7 @@ void loop()
         memcpy(SPI_colors, data, NB_DATAS_2);
 		ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		delay(1);
+		Cpt = 0;
 		bitSet(SPCR, SPIE);
 	}
 }
