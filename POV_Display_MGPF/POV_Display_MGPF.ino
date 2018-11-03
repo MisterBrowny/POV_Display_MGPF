@@ -41,7 +41,7 @@ void Capteur_Interrupt()
 ISR (SPI_STC_vect)
 {
     byte c = SPDR;  // grab byte from SPI Data Register
-  	div_t	temp = div(Cpt,3);
+  	//div_t	temp = div(Cpt,3);
   	
     // add to buffer if room
     /*if (SPI_color == 0)         {   SPI_colors[SPI_led_number].red = c;     }
@@ -64,9 +64,9 @@ ISR (SPI_STC_vect)
     
     SPI_Rcv_Time = micros();
     */
-    if (temp.rem == 0) 			{	SPI_colors[temp.quot].red = c;		}
-    else if (temp.rem == 1) 	{	SPI_colors[temp.quot].green = c;	}
-    else						{	SPI_colors[temp.quot].blue = c;		}
+    //if (temp.rem == 0) 			{	SPI_colors[temp.quot].red = c;		}
+    //else if (temp.rem == 1) 	{	SPI_colors[temp.quot].green = c;	}
+    //else						{	SPI_colors[temp.quot].blue = c;		}
     
     data[Cpt] = c;
     if (++ Cpt >= NB_DATAS)
@@ -111,12 +111,12 @@ void loop()
     {
     	digitalWrite(MOT_STEPPER, HIGH);
 		Serial.println("début trame");
-		for(i = 0; i < (28 * 3); i++)
+		for(i = 0; i < NB_DATAS; i++)
         {
         	Serial.println(data[i], DEC);
         }
         Serial.println("fin trame");
-
+		memcpy(SPI_colors, data, NB_DATAS);
         // Update the colors buffer.
         ledStrip.write(SPI_colors, LED_COUNT);
         
