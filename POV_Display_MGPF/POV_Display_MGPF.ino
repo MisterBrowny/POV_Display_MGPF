@@ -58,10 +58,12 @@ void Control_Stepper(void)
 	if (digitalRead(MOT_STEPPER))
 	{
 		digitalWrite(MOT_STEPPER, LOW);
+		digitalWrite(OUTPUT_COM, LOW);
 	}
 	else
 	{
 		digitalWrite(MOT_STEPPER, HIGH);
+		digitalWrite(OUTPUT_COM, HIGH);
 		if (++ Sector >= 100)  
 		{
 			Sector = 0;
