@@ -82,8 +82,8 @@ void setup()
 	// now turn on interrupts
 	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
 
-	//Timer1.initialize(2000);
-	//Timer1.attachInterrupt(Control_Stepper);
+	Timer1.initialize(2000);
+	Timer1.attachInterrupt(Control_Stepper);
 }
 
 void loop()
