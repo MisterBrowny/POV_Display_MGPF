@@ -95,13 +95,13 @@ void loop()
 	if (Write == true)
 	{
 		bitClear(SPCR, SPIE);
-		//memcpy(data, rcv_data, NB_DATAS_2);
-		for(i = 0; i < NB_DATAS_2; i++)
+		memcpy(data, rcv_data, NB_DATAS_2);
+		/*for(i = 0; i < NB_DATAS_2; i++)
 		{
 			Serial.print(rcv_data[i]);
 		}
-		Serial.println("fin trame");
-		Write = false;
+		Serial.println("fin trame");*/
+		
 		//bitSet(SPCR, SPIE);
 	//}
 	
@@ -110,7 +110,7 @@ void loop()
 		//bitClear(SPCR, SPIE);
 		MemoSector = Sector;
 
-		/*// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
+		// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
 		// 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
 		for (i = 0; i < 3; i ++)
 		{
@@ -347,7 +347,7 @@ void loop()
 			SPI_colors[i].green = data[1];
 			SPI_colors[i].blue = data[2];
 		}
-		*/
+		
 		/*
 		// Test leds
 		color.red = 0;
@@ -358,10 +358,11 @@ void loop()
         {
             SPI_colors[i] = color;
         }*/
-        //memcpy(SPI_colors, data, (28 * 3));
-		//ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
+        
+        ledStrip.write(SPI_colors, LED_COUNT);	// Update the colors buffer.
 		//delay(1);
 		Cpt = 0;
+		Write = false;
 		bitSet(SPCR, SPIE);
 	}
 }
