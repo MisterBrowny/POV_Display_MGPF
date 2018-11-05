@@ -1,4 +1,3 @@
-#include <EnableInterrupt.h>
 #include <SPI.h>
 #include <TimerOne.h>
 #include "PololuLedStrip.h"
@@ -29,16 +28,24 @@ void Capteur_Interrupt()
 	Sector = 0;
 }
 
-ISR (SPI_STC_vect)
+ISR (SPI0_Handler)
 {
-	// Récupére la data dans le buffer de reception
-	data[Cpt] = SPDR;
+	if (REG_SPI0_SR & SPI_SR_OVRES)
+	{
+		// Au moins 1 byte à été perdu
+	}
 
-	// Nombre de datas max atteint
-	if (++ Cpt >= NB_DATAS)
-	{ 
-		Cpt = 0;
-		Write = true;
+	if (REG_SPI0_SR & SPI_SR_RDRF)
+	{
+		// Récupére la data dans le buffer de reception
+		data[Cpt] = REG_SPI0_RDR;
+	
+		// Nombre de datas max atteint
+		if (++ Cpt >= NB_DATAS)
+		{ 
+			Cpt = 0;
+			Write = true;
+		}
 	}
 }
 
@@ -70,18 +77,28 @@ void setup()
 	Serial.begin(115200);
 
 	// Configure interruptions
-	enableInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, FALLING);
+	attachInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, FALLING);
 
 	pinMode(MOT_STEPPER, OUTPUT);
 
 	memset(data, 1, NB_DATAS);
-	
+
+	// SPI initialisation
+	SPI.begin(_pin);
+	REG_SPI0_CR = SPI_CR_SWRST;		// reset SPI
+	REG_SPI0_CR = SPI_CR_SPIEN;		// enable SPI
+	REG_SPI0_MR = SPI_MR_MODFDIS;	// slave and no modefault
+	REG_SPI0_CSR = SPI_MODE1;		// DLYBCT=0, DLYBS=0, SCBR=0, 8 bit transfer
+	REG_SPI0_IER = (SPI_IER_RDRF | SPI_IER_OVRES);
+	/*
 	// turn on SPI in slave mode
 	SPCR |= bit(SPE);
 
 	// now turn on interrupts
 	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
+	*/
 
+	
 	Timer1.initialize(20000);
 	Timer1.attachInterrupt(Control_Stepper);
 }

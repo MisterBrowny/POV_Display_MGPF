@@ -225,7 +225,6 @@ namespace Pololu
   template<unsigned char pin> void __attribute__((aligned(16))) PololuLedStrip<pin>::write(rgb_color * colors, unsigned int count)
   {
     #if defined(__AVR__)
-    uint8_t oldSREG = SREG,
     
     digitalWrite(pin, LOW);
     pinMode(pin, OUTPUT);
@@ -237,8 +236,7 @@ namespace Pololu
 
     #endif
 
-    cli();
-    //__disable_irq();   // Disable interrupts temporarily because we don't want our pulse timing to be messed up.
+    __disable_irq();   // Disable interrupts temporarily because we don't want our pulse timing to be messed up.
 
     while(count--)
     {
@@ -369,8 +367,7 @@ namespace Pololu
         __disable_irq();
       }
     }
-    //__enable_irq();         // Re-enable interrupts now that we are done.
-    SREG = oldSREG;;
+    __enable_irq();         // Re-enable interrupts now that we are done.
     //delayMicroseconds(50);  // Send the reset signal.
   }
 
