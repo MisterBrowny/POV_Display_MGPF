@@ -32,6 +32,7 @@ rgb_color							colors[LED_COUNT];
 #define			STEPPER_ACCEL 		100		// rpm / seconds
 #define			STEPPER_TURN_STEPS	100
 #define			STEPPER_MIN_PULSE	10		// ms
+#define			STEPPER_INIT_SPEED	100
 AccelStepper 						Motor(AccelStepper::FULL4WIRE, 2, 3, 4, 5);
 bool								Motor_Is_Running = false;
 
@@ -128,7 +129,7 @@ void setup()
 	// Stepper initialisation 
 	Motor.setMaxSpeed(STEPPER_MAX_SPEED);
 	Motor.setAcceleration(STEPPER_ACCEL);
-	Motor.setSpeed(1);
+	Motor.setSpeed(STEPPER_INIT_SPEED);
 	Motor.setMinPulseWidth(STEPPER_MIN_PULSE);
 
 	// Timer initialisation
