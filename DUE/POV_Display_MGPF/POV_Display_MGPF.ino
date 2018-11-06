@@ -32,7 +32,7 @@ rgb_color							colors[LED_COUNT];
 #define			STEPPER_ACCEL 		100		// rpm / seconds
 #define			STEPPER_TURN_STEPS	100
 #define			STEPPER_MIN_PULSE	10		// ms
-#define			STEPPER_INIT_SPEED	100
+#define			STEPPER_INIT_SPEED	600
 AccelStepper 						Motor(AccelStepper::FULL4WIRE, 2, 3, 4, 5);
 bool								Motor_Is_Running = false;
 
@@ -160,8 +160,8 @@ void loop()
 	else
 	{
 		Motor_Is_Running = false;
-		Motor.stop();
-		Motor.setSpeed(1);
+		//Motor.stop();
+		//Motor.setSpeed(1);
 	}
 
 	SPI_Refresh_Data();
