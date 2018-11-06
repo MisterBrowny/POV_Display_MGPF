@@ -28,12 +28,13 @@ PololuLedStrip<LED_COMMAND> 		ledStrip;
 rgb_color							colors[LED_COUNT];
 
 // STEPPER
-#define			STEPPER_MAX_SPEED	600		// rpm
-#define			STEPPER_ACCEL 		100		// rpm / seconds
-#define			STEPPER_TURN_STEPS	100
-#define			STEPPER_MIN_PULSE	10		// ms
-#define			STEPPER_INIT_SPEED	600
+#define			STEPPER_MAX_SPEED	2000		// steps / seconds
+#define			STEPPER_SPEED		2000		// steps / seconds
+#define			STEPPER_ACCEL 		400			// acceleration rate in steps / seconds
+#define			STEPPER_MIN_PULSE	10			// ms
+#define			STEPPER_INIT_MOVE	0x0fffffff	// nombre de step pour atteindre vmax
 AccelStepper 						Motor(AccelStepper::FULL4WIRE, 2, 3, 4, 5);
+bool								Motor_Is_Init = false;
 bool								Motor_Is_Running = false;
 
 // SPI
@@ -129,7 +130,7 @@ void setup()
 	// Stepper initialisation 
 	Motor.setMaxSpeed(STEPPER_MAX_SPEED);
 	Motor.setAcceleration(STEPPER_ACCEL);
-	Motor.setSpeed(STEPPER_INIT_SPEED);
+	Motor.setSpeed(STEPPER_SPEED);
 	Motor.setMinPulseWidth(STEPPER_MIN_PULSE);
 
 	// Timer initialisation
@@ -146,24 +147,30 @@ void loop()
 	{
 		if (Motor_Is_Running == false)
 		{
-			if (Motor.speed() != STEPPER_MAX_SPEED)
+			if (Motor_Is_Init == false)
+			{
+				Motor_Is_Init = true;
+				Motor.moveTo(STEPPER_INIT_MOVE);
+			}
+			else if (Motor.speed() != STEPPER_MAX_SPEED)
 			{
 				Motor_Is_Running = true;
+				Motor.setSpeed(STEPPER_SPEED);
 			}
+			Motor.run();
 		}
 		else
 		{
 			LED_Refresh();
+			if (Motor.runSpeed() == true)	{	Step ++;	}
 		}
 		Serial.println(Motor.speed());
-		if (Motor.runSpeed() == true)	{	Step ++;	}
 	}
 	else
 	{
 		Motor_Is_Running = false;
+		Motor_Is_Init = false;
 		Motor.disableOutputs();
-		//Motor.stop();
-		//Motor.setSpeed(1);
 	}
 
 	SPI_Refresh_Data();
