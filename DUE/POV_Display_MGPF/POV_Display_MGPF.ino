@@ -29,7 +29,7 @@ rgb_color							colors[LED_COUNT];
 
 // STEPPER
 #define			STEPPER_MAX_SPEED	600		// rpm
-#define			STEPPER_ACCEL 		10		// rpm / seconds
+#define			STEPPER_ACCEL 		100		// rpm / seconds
 #define			STEPPER_TURN_STEPS	100
 #define			STEPPER_MIN_PULSE	10		// ms
 AccelStepper 						Motor(AccelStepper::FULL4WIRE, 2, 3, 4, 5);
@@ -172,11 +172,12 @@ void SPI_Slave_Initialize (unsigned long Mode)
 	// MOSI	ICSP-4
 	// MISO	ICSP-1
 	// SCK	ICSP-3
+	// SS0  pin10
 	SPI.begin();
 	REG_SPI0_CR = SPI_CR_SWRST;		// reset SPI
 	REG_SPI0_CR = SPI_CR_SPIEN;		// enable SPI
 	REG_SPI0_MR = SPI_MR_MODFDIS;	// slave and no modefault
-	REG_SPI0_CSR = Mode;		// DLYBCT=0, DLYBS=0, SCBR=0, 8 bit transfer
+	REG_SPI0_CSR = Mode;			// DLYBCT=0, DLYBS=0, SCBR=0, 8 bit transfer
 	REG_SPI0_IER = (SPI_IER_RDRF | SPI_IER_OVRES);
 }
 
