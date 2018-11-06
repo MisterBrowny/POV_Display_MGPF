@@ -155,11 +155,13 @@ void loop()
 		{
 			LED_Refresh();
 		}
+		Serial.println(Motor.speed());
 		if (Motor.runSpeed() == true)	{	Step ++;	}
 	}
 	else
 	{
 		Motor_Is_Running = false;
+		Motor.disableOutputs();
 		//Motor.stop();
 		//Motor.setSpeed(1);
 	}
