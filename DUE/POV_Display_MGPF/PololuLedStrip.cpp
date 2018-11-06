@@ -1,3 +1,3 @@
 #include "PololuLedStrip.h"
 
-bool PololuLedStripBase::interruptFriendly = false;
+bool PololuLedStripBase::interruptFriendly = true;

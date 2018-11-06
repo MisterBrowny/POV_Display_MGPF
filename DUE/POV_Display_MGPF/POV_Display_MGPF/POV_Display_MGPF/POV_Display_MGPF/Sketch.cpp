@@ -1,72 +1,46 @@
+﻿/*Begining of Auto generated code by Atmel studio */
+#include <Arduino.h>
+
+/*End of auto generated code by Atmel studio */
+
 #include <SPI.h>
-#include <DueTimer.h>
-#include <AccelStepper.h>
-#include <Button.h>
+#include <TimerOne.h>
 #include "PololuLedStrip.h"
-
-// Prototypes
-ISR(SPI0_Handler);
-
-void	Capteur_Interrupt (void);
-void	Control_Stepper (void);
-void	SPI_Slave_Initialize (void);
-void	SPI_Mask_Interrupts (void);
-void	SPI_Unmask_Interrupts (void);
-void	SPI_Refresh_Data (void);
-void	SPI_Print_Data (void);
-void	Test_Led (void);
-void	COLOR_Refresh (void);
-void	LED_Refresh (void);
-void	Motor_Run(void);
+//Beginning of Auto generated function prototypes by Atmel Studio
+void Capteur_Interrupt();
+ISR(SPI0_Handler );
+void Control_Stepper(void );
+void Test_Led(void );
+//End of Auto generated function prototypes by Atmel Studio
 
 
-// Déclarations
-// LED
-#define 		LED_COMMAND			7
+
+const int stepsPerRevolution = 400;	// number of steps per revolution
+
+#define INPUT_CAPTEUR	8
+#define OUTPUT_COM		7
+#define MOT_STEPPER		5
+
+PololuLedStrip<OUTPUT_COM> ledStrip;
+
 #define 		LED_COUNT 			28
-PololuLedStrip<LED_COMMAND> 		ledStrip;
-rgb_color							colors[LED_COUNT];
-
-// STEPPER
-#define			STEPPER_MAX_SPEED	600		// rpm
-#define			STEPPER_ACCEL 		10		// rpm / seconds
-#define			STEPPER_TURN_STEPS	100
-#define			STEPPER_MIN_PULSE	10		// ms
-AccelStepper 						Motor(AccelStepper::FULL4WIRE, 2, 3, 4, 5);
-bool								Motor_Is_Running = false;
-
-// SPI
 #define			NB_LED_DISPLAY		161
 #define			NB_BYTE_PAR_LED		3
 #define			NB_DATAS			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
-#define			SPI_TIME_OUT		5	// ms
 
-typedef struct	StructSpi{
-	unsigned int	Counter;
-	unsigned long	Last_Time_Rcv;
-	unsigned char	Data[NB_DATAS];
-	unsigned char	Rcv_Data[NB_DATAS];
-	bool			Check_Time_Out;
-	bool			DataOk;
-}StruSpi;
+bool			Write;
+byte			Sector, MemoSector, data[NB_DATAS], rcv_data[NB_DATAS];
+unsigned int	Cpt;
 
-StruSpi								Spi0;
+rgb_color		colors[LED_COUNT];
 
-// BOUTON
-#define			BUTTON_INPUT		6
-Button 								Button_Moteur_On(BUTTON_INPUT);
-
-// DIVERS
-#define 		INPUT_CAPTEUR		8
-#define			SECTOR_NB_MAX		100
-//#define		TIMER_PERIOD		(60 * 1000 * 1000) / (SECTOR_NB_MAX * STEPPER_MAX_SPEED) // µs
-byte								Step, Sector, MemoSector;
+void Refresh_color (void);
 
 
 // Définition des interruptions
-void Capteur_Interrupt(void)
+void Capteur_Interrupt()
 {
-	Step = 0;
+	Sector = 0;
 }
 
 ISR (SPI0_Handler)
@@ -79,31 +53,32 @@ ISR (SPI0_Handler)
 	if (REG_SPI0_SR & SPI_SR_RDRF)
 	{
 		// Récupére la data dans le buffer de reception
-		Spi0.Rcv_Data[Spi0.Counter] = REG_SPI0_RDR;
+		data[Cpt] = REG_SPI0_RDR;
 	
 		// Nombre de datas max atteint
-		if (++ Spi0.Counter >= NB_DATAS)
+		if (++ Cpt >= NB_DATAS)
 		{ 
-			Spi0.Counter = 0;
-			Spi0.DataOk = true;
+			Cpt = 0;
+			Write = true;
 		}
-
-		Spi0.Check_Time_Out = true;
-		Spi0.Last_Time_Rcv = millis();
 	}
 }
 
-/*// USE TIMER
- * void Control_Stepper(void)
+void Control_Stepper(void)
 {
-	if (Motor_Is_Running == true)
+	if (digitalRead(MOT_STEPPER))
 	{
-		if (++ Sector >= SECTOR_NB_MAX)  
+		digitalWrite(MOT_STEPPER, LOW);
+	}
+	else
+	{
+		digitalWrite(MOT_STEPPER, HIGH);
+		if (++ Sector >= 100)  
 		{
 			Sector = 0;
 		}
 	}
-}*/
+}
 
 void setup()
 {
@@ -111,123 +86,78 @@ void setup()
 	pinMode(INPUT_CAPTEUR, INPUT);
 
 	// Configure outputs
-	pinMode(LED_COMMAND, OUTPUT);
-	
+	pinMode(OUTPUT_COM, OUTPUT);
+
 	// Initialise la liaison série à 115200 bauds
 	Serial.begin(115200);
 
 	// Configure interruptions
 	attachInterrupt(INPUT_CAPTEUR, Capteur_Interrupt, FALLING);
 
-	// Allume la strip light blanc très faible
-	memset(Spi0.Data, 1, NB_DATAS);
+	pinMode(MOT_STEPPER, OUTPUT);
+
+	memset(data, 1, NB_DATAS);
 
 	// SPI initialisation
-	SPI_Slave_Initialize(SPI_MODE1);
-
-	// Stepper initialisation 
-	Motor.setMaxSpeed(STEPPER_MAX_SPEED);
-	Motor.setAcceleration(STEPPER_ACCEL);
-	Motor.setSpeed(1);
-	Motor.setMinPulseWidth(STEPPER_MIN_PULSE);
-
-	// Timer initialisation
-	//Timer3.attachInterrupt(Control_Stepper);
-	//Timer3.start(TIMER_PERIOD);
-
-	// Button initialisation
-	Button_Moteur_On.begin();
-}
-
-void loop()
-{   
-	if (Button_Moteur_On.read() == Button::PRESSED)
-	{
-		if (Motor_Is_Running == false)
-		{
-			if (Motor.speed() != STEPPER_MAX_SPEED)
-			{
-				Motor_Is_Running = true;
-			}
-		}
-		else
-		{
-			LED_Refresh();
-		}
-		if (Motor.runSpeed() == true)	{	Step ++;	}
-	}
-	else
-	{
-		Motor_Is_Running = false;
-		Motor.stop();
-		Motor.setSpeed(1);
-	}
-
-	SPI_Refresh_Data();
-}
-
-void SPI_Slave_Initialize (unsigned long Mode)
-{
-	// SPI pour la DUE
-	// MOSI	ICSP-4
-	// MISO	ICSP-1
-	// SCK	ICSP-3
-	SPI.begin();
+	SPI.begin(_pin);
 	REG_SPI0_CR = SPI_CR_SWRST;		// reset SPI
 	REG_SPI0_CR = SPI_CR_SPIEN;		// enable SPI
 	REG_SPI0_MR = SPI_MR_MODFDIS;	// slave and no modefault
-	REG_SPI0_CSR = Mode;		// DLYBCT=0, DLYBS=0, SCBR=0, 8 bit transfer
+	REG_SPI0_CSR = SPI_MODE1;		// DLYBCT=0, DLYBS=0, SCBR=0, 8 bit transfer
 	REG_SPI0_IER = (SPI_IER_RDRF | SPI_IER_OVRES);
-}
+	/*
+	// turn on SPI in slave mode
+	SPCR |= bit(SPE);
 
-void SPI_Mask_Interrupts (void)
-{
-	REG_SPI0_IMR = (SPI_IMR_RDRF | SPI_IMR_OVRES);
-}
+	// now turn on interrupts
+	SPI.attachInterrupt();    //idem : SPCR |= _BV(SPIE);
+	*/
 
-void SPI_Unmask_Interrupts (void)
-{
-	REG_SPI0_IMR &= ~(SPI_IMR_RDRF | SPI_IMR_OVRES);
-}
-
-void SPI_Refresh_Data (void)
-{
-	if (Spi0.DataOk == true)
-	{
-		SPI_Mask_Interrupts();
-		memcpy(Spi0.Data, &Spi0.Rcv_Data[0], NB_DATAS);
-		Spi0.DataOk = false;
-		Spi0.Check_Time_Out = false;
-		SPI_Unmask_Interrupts();
-		
-		//SPI_Print_Data();
-	}
-	else if (Spi0.Check_Time_Out == true)
-	{
-		if ((millis() - Spi0.Last_Time_Rcv) > SPI_TIME_OUT)
-		{
-			Spi0.Check_Time_Out = false;
-			Spi0.Counter = 0;
-		}
-	}
-}
-
-void SPI_Print_Data (void)
-{
-	unsigned char    i;
 	
-	Serial.println("Début trame");
-	for(i = 0; i < NB_DATAS; i++)
+	Timer1.initialize(20000);
+	Timer1.attachInterrupt(Control_Stepper);
+}
+
+
+
+
+void loop()
+{   
+	
+	rgb_color color;
+	
+	if (Write == true)
 	{
-		Serial.print(Spi0.Data[i]);
+		bitClear(SPCR, SPIE);
+		//memcpy(data, rcv_data, NB_DATAS);
+		/*for(i = 0; i < NB_DATAS_2; i++)
+		{
+			Serial.print(rcv_data[i]);
+		}
+		Serial.println("fin trame");*/
+		//bitSet(SPCR, SPIE);
+	//}
+	
+	//if (Sector != MemoSector)
+	//{
+		//bitClear(SPCR, SPIE);
+		//MemoSector = Sector;
+
+		Refresh_color();
+		
+		/*
+		*/
+        ledStrip.write(colors, LED_COUNT);	// Update the colors buffer.
+		delay(1);
+		Cpt = 0;
+		Write = false;
+		bitSet(SPCR, SPIE);
 	}
-	Serial.println("fin trame");
 }
 
 void Test_Led (void)
 {
 	unsigned char    i;
-	rgb_color		color;
 	
 	color.red = 0;
 	color.green = 0;
@@ -237,9 +167,10 @@ void Test_Led (void)
     {
         colors[i] = color;
     }
+
 }
 
-void COLOR_Refresh (void)
+void Refresh_color (void)
 {
 	unsigned char    i,j;
 	
@@ -280,9 +211,9 @@ void COLOR_Refresh (void)
 		else if (Sector < 97)		{	j = 30;	}
 		else 						{	j = 31;	}
 		
-		colors[i].red = Spi0.Data[387 + 3*j];
-		colors[i].green = Spi0.Data[388 + 3*j];
-		colors[i].blue = Spi0.Data[389 + 3*j];
+		colors[i].red = data[387 + 3*j];
+		colors[i].green = data[388 + 3*j];
+		colors[i].blue = data[389 + 3*j];
 	}
 
 	// Group7 - led [25-23] - Data[98 - 129] - 32 pixels
@@ -322,9 +253,9 @@ void COLOR_Refresh (void)
 		else if (Sector < 97)		{	j = 30;	}
 		else 						{	j = 31;	}
 		
-		colors[i].red = Spi0.Data[291 + 3*j];
-		colors[i].green = Spi0.Data[292 + 3*j];
-		colors[i].blue = Spi0.Data[293 + 3*j];
+		colors[i].red = data[291 + 3*j];
+		colors[i].green = data[292 + 3*j];
+		colors[i].blue = data[293 + 3*j];
 	}
 
 	// Group6 - led [22-20] - Data[70 - 97] - 28 pixels
@@ -360,9 +291,9 @@ void COLOR_Refresh (void)
 		else if (Sector < 96)		{	j = 26;	}
 		else 						{	j = 27;	}
 		
-		colors[i].red = Spi0.Data[207 + 3*j];
-		colors[i].green = Spi0.Data[208 + 3*j];
-		colors[i].blue = Spi0.Data[209 + 3*j];
+		colors[i].red = data[207 + 3*j];
+		colors[i].green = data[208 + 3*j];
+		colors[i].blue = data[209 + 3*j];
 	}
 
 	// Group5 - led [19-16] - Data[46 - 69] - 24 pixels
@@ -394,9 +325,9 @@ void COLOR_Refresh (void)
 		else if (Sector < 96)		{	j = 22;	}
 		else 						{	j = 23;	}
 		
-		colors[i].red = Spi0.Data[135 + 3*j];
-		colors[i].green = Spi0.Data[136 + 3*j];
-		colors[i].blue = Spi0.Data[137 + 3*j];
+		colors[i].red = data[135 + 3*j];
+		colors[i].green = data[136 + 3*j];
+		colors[i].blue = data[137 + 3*j];
 	}
 
 	// Group4 - led [15-12] - Data[22 - 45] - 24 pixels
@@ -428,9 +359,9 @@ void COLOR_Refresh (void)
 		else if (Sector < 96)		{	j = 22;	}
 		else 						{	j = 23;	}
 		
-		colors[i].red = Spi0.Data[63 + 3*j];
-		colors[i].green = Spi0.Data[64 + 3*j];
-		colors[i].blue = Spi0.Data[65 + 3*j];
+		colors[i].red = data[63 + 3*j];
+		colors[i].green = data[64 + 3*j];
+		colors[i].blue = data[65 + 3*j];
 	}
 
 	// Group3 - led [11-08] - Data [10 - 21] - 12 pixels
@@ -450,9 +381,9 @@ void COLOR_Refresh (void)
 		else if (Sector < 92)		{	j = 10;	}
 		else 						{	j = 11;	}
 		
-		colors[i].red = Spi0.Data[27 + 3*j];
-		colors[i].green = Spi0.Data[28 + 3*j];
-		colors[i].blue = Spi0.Data[29 + 3*j];
+		colors[i].red = data[27 + 3*j];
+		colors[i].green = data[28 + 3*j];
+		colors[i].blue = data[29 + 3*j];
 	}
 
 	// Group2 - led [07-04] - Data [2 - 9] - 8 pixels
@@ -468,35 +399,17 @@ void COLOR_Refresh (void)
 		else if (Sector < 87)		{	j = 6;	}
 		else 						{	j = 7;	}
 		
-		colors[i].red = Spi0.Data[3 + 3*j];
-		colors[i].green = Spi0.Data[4 + 3*j];
-		colors[i].blue = Spi0.Data[5 + 3*j];
+		colors[i].red = data[3 + 3*j];
+		colors[i].green = data[4 + 3*j];
+		colors[i].blue = data[5 + 3*j];
 	}
 
 	// Group1 - led [03-01] - Data [1] - 1 pixel
 	for (i = 25; i < 28; i ++)
 	{
-		colors[i].red = Spi0.Data[0];
-		colors[i].green = Spi0.Data[1];
-		colors[i].blue = Spi0.Data[2];
+		colors[i].red = data[0];
+		colors[i].green = data[1];
+		colors[i].blue = data[2];
 	}
 }
 
-void LED_Refresh (void)
-{
-	Sector = Step / 2;
-	
-	if (Sector != MemoSector)
-	{
-		MemoSector = Sector;
-
-		COLOR_Refresh();
-		
-		ledStrip.write(colors, LED_COUNT);
-	}
-}
-
-void Motor_Run(void)
-{
-	if (Motor.runSpeed() == true)	{	Step ++;	}
-}
