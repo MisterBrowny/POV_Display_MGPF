@@ -73,10 +73,10 @@ void Capteur_Interrupt(void)
 
 ISR (SPI0_Handler)
 {
-	if (REG_SPI0_SR & SPI_SR_OVRES)
+	/*if (REG_SPI0_SR & SPI_SR_OVRES)
 	{
 		// Au moins 1 byte à été perdu
-	}
+	}*/
 
 	if (REG_SPI0_SR & SPI_SR_RDRF)
 	{
@@ -126,7 +126,7 @@ void setup()
 	memset(Spi0.Data, 1, NB_DATAS);
 
 	// SPI initialisation
-	SPI_Slave_Initialize(SPI_MODE1);
+	SPI_Slave_Initialize(SPI_MODE0);
 
 	// Stepper initialisation 
 	Motor.setMaxSpeed(STEPPER_MAX_SPEED);
@@ -198,7 +198,7 @@ void SPI_Slave_Initialize (unsigned long Mode)
 	REG_SPI0_CR = SPI_CR_SPIEN;		// enable SPI
 	REG_SPI0_MR = SPI_MR_MODFDIS;	// slave and no modefault
 	REG_SPI0_CSR = Mode;			// DLYBCT=0, DLYBS=0, SCBR=0, 8 bit transfer
-	REG_SPI0_IER = (SPI_IER_RDRF | SPI_IER_OVRES);
+	REG_SPI0_IER = (SPI_IER_RDRF /*| SPI_IER_OVRES*/);
 }
 
 void SPI_Mask_Interrupts (void)
