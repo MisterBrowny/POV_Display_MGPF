@@ -81,7 +81,7 @@ ISR (SPI0_Handler)
 	if (REG_SPI0_SR & SPI_SR_RDRF)
 	{
 		// Récupére la data dans le buffer de reception
-		Spi0.Rcv_Data[Spi0.Counter] = REG_SPI0_RDR;
+		Spi0.Data[Spi0.Counter] = REG_SPI0_RDR;
 		// Nombre de datas max atteint
 		if (++ Spi0.Counter >= NB_DATAS)
 		{ 
@@ -145,7 +145,7 @@ void setup()
 
 void loop()
 {   
-	/*if (Button_Moteur_On.read() == Button::PRESSED)
+	if (Button_Moteur_On.read() == Button::PRESSED)
 	{
 		if (Motor_Is_Running == false)
 		{
@@ -181,7 +181,8 @@ void loop()
 			Serial.println("Motor stop");
 			Serial.println(Motor.speed());
 		}
-	}*/
+	}
+
 	SPI_Refresh_Data();	
 }
 
@@ -215,12 +216,12 @@ void SPI_Refresh_Data (void)
 	if (Spi0.DataOk == true)
 	{
 		SPI_Mask_Interrupts();
-		memcpy(Spi0.Data, &Spi0.Rcv_Data[0], NB_DATAS);
+		//memcpy(Spi0.Data, &Spi0.Rcv_Data[0], NB_DATAS);
 		Spi0.DataOk = false;
 		Spi0.Check_Time_Out = false;
 		SPI_Unmask_Interrupts();
 		
-		SPI_Print_Data();
+		//SPI_Print_Data();
 	}
 	else if (Spi0.Check_Time_Out == true)
 	{
