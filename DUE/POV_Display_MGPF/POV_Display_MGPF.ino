@@ -9,7 +9,7 @@ ISR(SPI0_Handler);
 
 void	Capteur_Interrupt (void);
 void	Control_Stepper (void);
-void	SPI_Slave_Initialize (void);
+void	SPI_Slave_Initialize (unsigned long Mode);
 void	SPI_Mask_Interrupts (void);
 void	SPI_Unmask_Interrupts (void);
 void	SPI_Refresh_Data (void);
@@ -28,8 +28,8 @@ PololuLedStrip<LED_COMMAND> 		ledStrip;
 rgb_color							colors[LED_COUNT];
 
 // STEPPER
-#define			STEPPER_MAX_SPEED	1600		// steps / seconds
-#define			STEPPER_SPEED		1600		// steps / seconds
+#define			STEPPER_MAX_SPEED	1500		// steps / seconds
+#define			STEPPER_SPEED		1500		// steps / seconds
 #define			STEPPER_ACCEL 		400			// acceleration rate in steps / seconds
 #define			STEPPER_MIN_PULSE	50			// µs
 #define			STEPPER_INIT_MOVE	0x0fffffff	// nombre de step pour atteindre vmax
@@ -164,12 +164,12 @@ void loop()
 		}
 		else
 		{
-			Serial.println("LED refresh");
+			//Serial.println("LED refresh");
 			LED_Refresh();
 			if (Motor.runSpeed() == true)	{	Step ++;	}
 		}
 	}
-	else
+	else if (Button_Moteur_On.read() == Button::RELEASED)
 	{
 		if ((Motor_Is_Init == true) || (Motor_Is_Running == true))
 		{
