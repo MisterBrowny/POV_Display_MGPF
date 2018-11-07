@@ -124,7 +124,7 @@ void setup()
 	memset(Spi0.Data, 1, NB_DATAS);
 
 	// SPI initialisation
-	SPI_Slave_Initialize(SPI_MODE0);
+	SPI_Slave_Initialize(SPI_MODE1);
 
 	// Stepper initialisation 
 	Motor.setMaxSpeed(STEPPER_MAX_SPEED);
