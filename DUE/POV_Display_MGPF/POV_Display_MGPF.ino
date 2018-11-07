@@ -132,7 +132,8 @@ void setup()
 	Motor.setAcceleration(STEPPER_ACCEL);
 	Motor.setSpeed(STEPPER_SPEED);
 	Motor.setMinPulseWidth(STEPPER_MIN_PULSE);
-
+	Motor.moveTo(STEPPER_INIT_MOVE);
+	
 	// Timer initialisation
 	//Timer3.attachInterrupt(Control_Stepper);
 	//Timer3.start(TIMER_PERIOD);
@@ -143,7 +144,8 @@ void setup()
 
 void loop()
 {   
-	if (Button_Moteur_On.read() == Button::PRESSED)
+	Motor.run();
+	/*if (Button_Moteur_On.read() == Button::PRESSED)
 	{
 		if (Motor_Is_Running == false)
 		{
@@ -173,7 +175,7 @@ void loop()
 		Motor.disableOutputs();
 	}
 
-	SPI_Refresh_Data();
+	SPI_Refresh_Data();*/
 }
 
 void SPI_Slave_Initialize (unsigned long Mode)
