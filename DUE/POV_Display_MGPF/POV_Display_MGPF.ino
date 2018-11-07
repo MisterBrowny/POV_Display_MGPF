@@ -239,7 +239,7 @@ void SPI_Print_Data (void)
 	Serial.println("Début trame");
 	for(i = 0; i < NB_DATAS; i++)
 	{
-		Serial.print(Spi0.Data[i]);
+		Serial.println(Spi0.Data[i]);
 	}
 	Serial.println("fin trame");
 }
