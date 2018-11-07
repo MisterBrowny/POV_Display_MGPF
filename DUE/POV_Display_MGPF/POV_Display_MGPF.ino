@@ -202,7 +202,7 @@ void SPI_Slave_Initialize (unsigned long Mode)
 	REG_SPI0_CR = SPI_CR_SPIEN;		// enable SPI
 	REG_SPI0_MR = SPI_MR_MODFDIS;	// slave and no modefault
 	REG_SPI0_CSR = Mode;			// DLYBCT=0, DLYBS=0, SCBR=0, 8 bit transfer
-	//REG_SPI0_IER = (SPI_IER_RDRF /*| SPI_IER_OVRES*/);
+	REG_SPI0_IER = (SPI_IER_RDRF /*| SPI_IER_OVRES*/);
 }
 
 void SPI_Mask_Interrupts (void)
