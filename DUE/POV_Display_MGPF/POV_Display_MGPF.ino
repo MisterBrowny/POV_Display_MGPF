@@ -29,7 +29,7 @@ rgb_color							colors[LED_COUNT];
 
 // STEPPER
 #define			STEPPER_MAX_SPEED	2000		// steps / seconds
-#define			STEPPER_SPEED		1500		// steps / seconds
+#define			STEPPER_SPEED		1300		// steps / seconds
 #define			STEPPER_ACCEL 		400			// acceleration rate in steps / seconds
 #define			STEPPER_MIN_PULSE	10			// ms
 #define			STEPPER_INIT_MOVE	0x0fffffff	// nombre de step pour atteindre vmax
@@ -154,7 +154,7 @@ void loop()
 				Motor_Is_Init = true;
 				Motor.moveTo(STEPPER_INIT_MOVE);
 			}
-			else if (Motor.speed() != STEPPER_MAX_SPEED)
+			else if (Motor.speed() == STEPPER_SPEED)
 			{
 				Motor_Is_Running = true;
 				Motor.setSpeed(STEPPER_SPEED);
