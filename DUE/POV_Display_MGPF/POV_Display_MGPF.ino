@@ -141,6 +141,8 @@ void setup()
 
 	// Button initialisation
 	Button_Moteur_On.begin();
+
+	NVIC_EnableIRQ(SPI0_IRQn);
 }
 
 void loop()
@@ -184,8 +186,8 @@ void loop()
 	}
 
 	SPI_Refresh_Data();*/
-	while ( (REG_SPI0_SR & SPI_SR_RDRF) == 0 ) ;
-	Serial.println(REG_SPI0_RDR);
+	//while ( (REG_SPI0_SR & SPI_SR_RDRF) == 0 ) ;
+	//Serial.println(REG_SPI0_RDR);
 }
 
 void SPI_Slave_Initialize (unsigned long Mode)
