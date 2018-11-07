@@ -28,8 +28,8 @@ PololuLedStrip<LED_COMMAND> 		ledStrip;
 rgb_color							colors[LED_COUNT];
 
 // STEPPER
-#define			STEPPER_MAX_SPEED	1500		// steps / seconds
-#define			STEPPER_SPEED		1500		// steps / seconds
+#define			STEPPER_MAX_SPEED	2000		// steps / seconds
+#define			STEPPER_SPEED		2000		// steps / seconds
 #define			STEPPER_ACCEL 		400			// acceleration rate in steps / seconds
 #define			STEPPER_MIN_PULSE	50			// µs
 #define			STEPPER_INIT_MOVE	0x0fffffff	// nombre de step pour atteindre vmax
@@ -169,9 +169,14 @@ void loop()
 	}
 	else
 	{
-		Motor_Is_Running = false;
-		Motor_Is_Init = false;
-		Motor.disableOutputs();
+		if (Motor_Is_Init == true) || (Motor_Is_Running == true)
+		{
+			Motor_Is_Running = false;
+			Motor_Is_Init = false;	
+			Motor.stop();
+			Motor.disableOutputs();
+			Motor.setSpeed(200);
+		}
 	}
 
 	SPI_Refresh_Data();
