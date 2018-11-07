@@ -144,8 +144,7 @@ void setup()
 
 void loop()
 {   
-	Motor.run();
-	/*if (Button_Moteur_On.read() == Button::PRESSED)
+	if (Button_Moteur_On.read() == Button::PRESSED)
 	{
 		if (Motor_Is_Running == false)
 		{
@@ -175,7 +174,7 @@ void loop()
 		Motor.disableOutputs();
 	}
 
-	SPI_Refresh_Data();*/
+	SPI_Refresh_Data();
 }
 
 void SPI_Slave_Initialize (unsigned long Mode)
