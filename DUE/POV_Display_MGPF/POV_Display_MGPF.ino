@@ -152,6 +152,7 @@ void loop()
 			{
 				Motor_Is_Init = true;
 				Motor.move(STEPPER_INIT_MOVE);
+				Motor.setSpeed(200);
 				Serial.println("Motor init");
 			}
 			else if (Motor.speed() == STEPPER_SPEED)
@@ -164,7 +165,6 @@ void loop()
 		}
 		else
 		{
-			//Serial.println("LED refresh");
 			LED_Refresh();
 			if (Motor.runSpeed() == true)	{	Step ++;	}
 		}
@@ -177,9 +177,6 @@ void loop()
 			Motor_Is_Init = false;	
 			Motor.stop();
 			Motor.disableOutputs();
-			Motor.setSpeed(200);
-			//Motor.run();
-			//Motor.stop();
 			Serial.println("Motor stop");
 			Serial.println(Motor.speed());
 		}
@@ -514,7 +511,7 @@ void LED_Refresh (void)
 		MemoSector = Sector;
 
 		COLOR_Refresh();
-		
+		Test_Led();
 		ledStrip.write(colors, LED_COUNT);
 	}
 }
