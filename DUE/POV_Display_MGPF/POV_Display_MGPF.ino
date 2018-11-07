@@ -169,7 +169,7 @@ void loop()
 	}
 	else
 	{
-		if (Motor_Is_Init == true) || (Motor_Is_Running == true)
+		if ((Motor_Is_Init == true) || (Motor_Is_Running == true))
 		{
 			Motor_Is_Running = false;
 			Motor_Is_Init = false;	
