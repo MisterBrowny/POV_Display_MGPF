@@ -220,7 +220,7 @@ void SPI_Refresh_Data (void)
 		Spi0.Check_Time_Out = false;
 		SPI_Unmask_Interrupts();
 		
-		//SPI_Print_Data();
+		SPI_Print_Data();
 	}
 	else if (Spi0.Check_Time_Out == true)
 	{
@@ -511,7 +511,7 @@ void LED_Refresh (void)
 		MemoSector = Sector;
 
 		COLOR_Refresh();
-		Test_Led();
+		
 		ledStrip.write(colors, LED_COUNT);
 	}
 }
