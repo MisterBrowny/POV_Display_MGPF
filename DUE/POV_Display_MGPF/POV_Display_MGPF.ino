@@ -83,7 +83,6 @@ ISR (SPI0_Handler)
 		
 		// Récupére la data dans le buffer de reception
 		Spi0.Rcv_Data[Spi0.Counter] = REG_SPI0_RDR;
-		Serial.println(Spi0.Rcv_Data[Spi0.Counter]);
 		// Nombre de datas max atteint
 		if (++ Spi0.Counter >= NB_DATAS)
 		{ 
@@ -188,6 +187,8 @@ void loop()
 	SPI_Refresh_Data();*/
 	//while ( (REG_SPI0_SR & SPI_SR_RDRF) == 0 ) ;
 	//Serial.println(REG_SPI0_RDR);
+	Serial.println(Spi0.Rcv_Data[Spi0.Counter]);
+		
 }
 
 void SPI_Slave_Initialize (unsigned long Mode)
