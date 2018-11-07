@@ -152,20 +152,22 @@ void loop()
 			{
 				Motor_Is_Init = true;
 				Motor.move(STEPPER_INIT_MOVE);
+				Serial.println("Motor init");
 			}
 			else if (Motor.speed() == STEPPER_SPEED)
 			{
 				Motor_Is_Running = true;
 				Motor.setSpeed(STEPPER_SPEED);
+				Serial.println("Motor end acceleration");
 			}
 			Motor.run();
 		}
 		else
 		{
+			Serial.println("LED refresh");
 			LED_Refresh();
 			if (Motor.runSpeed() == true)	{	Step ++;	}
 		}
-		Serial.println(Motor.speed());
 	}
 	else
 	{
