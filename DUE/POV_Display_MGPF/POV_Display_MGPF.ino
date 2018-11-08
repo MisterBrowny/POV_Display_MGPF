@@ -46,8 +46,8 @@ bool								Motor_Is_Running = false;
 typedef struct	StructSpi{
 	unsigned int	Counter;
 	unsigned long	Last_Time_Rcv;
-	unsigned char	Data[NB_DATAS];
-	unsigned char	Rcv_Data[NB_DATAS];
+	unsigned char	Data[161*3];
+	unsigned char	Rcv_Data[161*3];
 	bool			Check_Time_Out;
 	bool			DataOk;
 }StruSpi;
