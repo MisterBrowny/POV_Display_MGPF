@@ -28,9 +28,9 @@ PololuLedStrip<LED_COMMAND> 		ledStrip;
 rgb_color							colors[LED_COUNT];
 
 // STEPPER
-#define			STEPPER_MAX_SPEED	1600		// steps / seconds
-#define			STEPPER_SPEED		1600		// steps / seconds
-#define			STEPPER_ACCEL 		300			// acceleration rate in steps / seconds
+#define			STEPPER_MAX_SPEED	1700		// steps / seconds
+#define			STEPPER_SPEED		1700		// steps / seconds
+#define			STEPPER_ACCEL 		200			// acceleration rate in steps / seconds
 #define			STEPPER_MIN_PULSE	50			// µs
 #define			STEPPER_INIT_MOVE	0x0fffffff	// nombre de step pour atteindre vmax
 AccelStepper 						Motor(AccelStepper::FULL4WIRE, 2, 3, 4, 5);
@@ -265,7 +265,7 @@ void COLOR_Refresh_Test (void)
 {
 	unsigned char    i,j;
 	rgb_color		color;
-	if (Sector == 0)
+	if (Sector <= 4)
 	{
 		color.red = 255;
 		color.green = 255;
