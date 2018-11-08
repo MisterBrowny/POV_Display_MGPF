@@ -774,6 +774,8 @@ void LED_Refresh (void)
 		//COLOR_Refresh();
 		
 		COLOR_Refresh_Test();
+
+		Test_Led();
 		
 		ledStrip.write(colors, LED_COUNT);
 	}
