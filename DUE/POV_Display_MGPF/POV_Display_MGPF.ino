@@ -61,7 +61,6 @@ Button 								Button_Moteur_On(BUTTON_INPUT);
 // DIVERS
 #define 		INPUT_CAPTEUR		8
 #define			SECTOR_NB_MAX		100
-//#define		TIMER_PERIOD		(60 * 1000 * 1000) / (SECTOR_NB_MAX * STEPPER_MAX_SPEED) // µs
 byte								Step, Sector, MemoSector;
 
 
@@ -212,17 +211,17 @@ void SPI_Unmask_Interrupts (void)
 
 void SPI_Refresh_Data (void)
 {
-	if (Spi0.DataOk == true)
+	/*if (Spi0.DataOk == true)
 	{
-		SPI_Mask_Interrupts();
+		//SPI_Mask_Interrupts();
 		//memcpy(Spi0.Data, &Spi0.Rcv_Data[0], NB_DATAS);
 		Spi0.DataOk = false;
-		Spi0.Check_Time_Out = false;
-		SPI_Unmask_Interrupts();
+		//Spi0.Check_Time_Out = false;
+		//SPI_Unmask_Interrupts();
 		
 		//SPI_Print_Data();
 	}
-	else if (Spi0.Check_Time_Out == true)
+	else*/ if (Spi0.Check_Time_Out == true)
 	{
 		if ((millis() - Spi0.Last_Time_Rcv) > SPI_TIME_OUT)
 		{
@@ -506,7 +505,8 @@ void LED_Refresh (void)
 {
 	Sector = Step / 2;
 	
-	if (Sector != MemoSector)
+	if (	(Sector != MemoSector)
+		&&	(Spi0.Counter = 0))
 	{
 		MemoSector = Sector;
 
