@@ -75,7 +75,6 @@ ISR (SPI0_Handler)
 	if (REG_SPI0_SR & SPI_SR_OVRES)
 	{
 		// Au moins 1 byte à été perdu
-		Serial.println("SPI Overrun");
 	}
 
 	if (REG_SPI0_SR & SPI_SR_RDRF)
