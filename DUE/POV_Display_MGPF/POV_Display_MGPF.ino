@@ -31,7 +31,7 @@ rgb_color							colors[LED_COUNT];
 #define			STEPPER_MAX_SPEED	1700		// steps / seconds
 #define			STEPPER_SPEED		1700		// steps / seconds
 #define			STEPPER_ACCEL 		200			// acceleration rate in steps / seconds
-#define			STEPPER_MIN_PULSE	50			// µs
+#define			STEPPER_MIN_PULSE	0			// µs
 #define			STEPPER_INIT_MOVE	0x0fffffff	// nombre de step pour atteindre vmax
 AccelStepper 						Motor(AccelStepper::FULL4WIRE, 2, 3, 4, 5);
 bool								Motor_Is_Init = false;
