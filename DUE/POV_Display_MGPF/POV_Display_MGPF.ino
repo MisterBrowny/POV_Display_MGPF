@@ -88,6 +88,10 @@ ISR (SPI0_Handler)
 			Spi0.Counter = 0;
 			Spi0.DataOk = true;
 		}
+		else
+		{
+			Spi0.DataOk = false;
+		}
 
 		Spi0.Check_Time_Out = true;
 		Spi0.Last_Time_Rcv = millis();
@@ -506,7 +510,7 @@ void LED_Refresh (void)
 	Sector = Step / 2;
 	
 	if (	(Sector != MemoSector)
-		&&	(Spi0.Counter = 0))
+		&&	(Spi0.DataOk == true))
 	{
 		MemoSector = Sector;
 
