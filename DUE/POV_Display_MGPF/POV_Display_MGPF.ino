@@ -38,7 +38,7 @@ bool								Motor_Is_Init = false;
 bool								Motor_Is_Running = false;
 
 // SPI
-#define			NB_LED_DISPLAY		161
+#define			NB_LED_DISPLAY		100
 #define			NB_BYTE_PAR_LED		3
 #define			NB_DATAS			(unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
 #define			SPI_TIME_OUT		5	// ms
