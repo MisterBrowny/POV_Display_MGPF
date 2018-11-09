@@ -46,8 +46,8 @@ bool								Motor_Is_Running = false;
 typedef struct	StructSpi{
 	unsigned int	Counter;
 	unsigned long	Last_Time_Rcv;
-	unsigned char	Data[161*3];
-	unsigned char	Rcv_Data[161*3];
+	unsigned char	Data[NB_DATAS];
+	unsigned char	Rcv_Data[NB_DATAS];
 	bool			Check_Time_Out;
 	bool			DataOk;
 }StruSpi;
@@ -72,17 +72,18 @@ void Capteur_Interrupt(void)
 
 ISR (SPI0_Handler)
 {
-	if (REG_SPI0_SR & SPI_SR_OVRES)
+	/*if (REG_SPI0_SR & SPI_SR_OVRES)
 	{
 		// Au moins 1 byte à été perdu
-	}
+	}*/
 
 	if (REG_SPI0_SR & SPI_SR_RDRF)
 	{
 		// Récupére la data dans le buffer de reception
 		Spi0.Data[Spi0.Counter] = REG_SPI0_RDR;
+		
 		// Nombre de datas max atteint
-		if (++ Spi0.Counter >= NB_DATAS)
+		/*if (++ Spi0.Counter >= NB_DATAS)
 		{ 
 			Spi0.Counter = 0;
 			Spi0.DataOk = true;
@@ -90,24 +91,12 @@ ISR (SPI0_Handler)
 		else
 		{
 			Spi0.DataOk = false;
-		}
+		}*/
 
 		Spi0.Check_Time_Out = true;
 		Spi0.Last_Time_Rcv = millis();
 	}
 }
-
-/*// USE TIMER
- * void Control_Stepper(void)
-{
-	if (Motor_Is_Running == true)
-	{
-		if (++ Sector >= SECTOR_NB_MAX)  
-		{
-			Sector = 0;
-		}
-	}
-}*/
 
 void setup()
 {
@@ -135,14 +124,8 @@ void setup()
 	Motor.setSpeed(STEPPER_SPEED);
 	Motor.setMinPulseWidth(STEPPER_MIN_PULSE);
 	
-	// Timer initialisation
-	//Timer3.attachInterrupt(Control_Stepper);
-	//Timer3.start(TIMER_PERIOD);
-
 	// Button initialisation
 	Button_Moteur_On.begin();
-
-	NVIC_EnableIRQ(SPI0_IRQn);
 }
 
 void loop()
@@ -199,7 +182,9 @@ void SPI_Slave_Initialize (unsigned long Mode)
 	REG_SPI0_CR = SPI_CR_SPIEN;		// enable SPI
 	REG_SPI0_MR = SPI_MR_MODFDIS;	// slave and no modefault
 	REG_SPI0_CSR = Mode;			// DLYBCT=0, DLYBS=0, SCBR=0, 8 bit transfer
-	REG_SPI0_IER = (SPI_IER_RDRF | SPI_IER_OVRES);
+	//REG_SPI0_IER = (SPI_IER_RDRF | SPI_IER_OVRES);
+	REG_SPI0_IER = SPI_IER_RDRF;	// active l'interruption de reception de SPI
+	NVIC_EnableIRQ(SPI0_IRQn);		// activé l'interruption SPI
 }
 
 void SPI_Mask_Interrupts (void)
@@ -518,6 +503,263 @@ void COLOR_Refresh_Test (void)
 	}
 }
 
+void COLOR_Refresh_Test_2(void)
+{
+	unsigned char    i,j;
+	rgb_color		color;
+	if (Sector <= 4)
+	{
+		color.red = 255;
+		color.green = 255;
+		color.blue = 255;
+			
+		for(i = 0; i < LED_COUNT; i++)
+	    {
+	        colors[i] = color;
+	    }
+	}
+	else
+	{
+		// Group8 - led [28-26] - Data[130 - 161] - 32 pixels
+		// 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
+		for (i = 0; i < 3; i ++)
+		{
+			if (Sector < 4)				{	j = 0;	}
+			else if (Sector < 7)		{	j = 1;	}
+			else if (Sector < 10)		{	j = 2;	}
+			else if (Sector < 13)		{	j = 3;	}
+			else if (Sector < 16)		{	j = 4;	}
+			else if (Sector < 19)		{	j = 5;	}
+			else if (Sector < 22)		{	j = 6;	}
+			else if (Sector < 25)		{	j = 7;	}
+			else if (Sector < 29)		{	j = 8;	}
+			else if (Sector < 32)		{	j = 9;	}
+			else if (Sector < 35)		{	j = 10;	}
+			else if (Sector < 38)		{	j = 11;	}
+			else if (Sector < 41)		{	j = 12;	}
+			else if (Sector < 44)		{	j = 13;	}
+			else if (Sector < 47)		{	j = 14;	}
+			else if (Sector < 50)		{	j = 15;	}
+			else if (Sector < 54)		{	j = 16;	}
+			else if (Sector < 57)		{	j = 17;	}
+			else if (Sector < 60)		{	j = 18;	}
+			else if (Sector < 63)		{	j = 19;	}
+			else if (Sector < 66)		{	j = 20;	}
+			else if (Sector < 69)		{	j = 21;	}
+			else if (Sector < 72)		{	j = 22;	}
+			else if (Sector < 75)		{	j = 23;	}
+			else if (Sector < 79)		{	j = 24;	}
+			else if (Sector < 82)		{	j = 25;	}
+			else if (Sector < 85)		{	j = 26;	}
+			else if (Sector < 88)		{	j = 27;	}
+			else if (Sector < 91)		{	j = 28;	}
+			else if (Sector < 94)		{	j = 29;	}
+			else if (Sector < 97)		{	j = 30;	}
+			else 						{	j = 31;	}
+			
+			colors[i].red = Spi0.Data[387 + 3*j];
+			colors[i].green = Spi0.Data[388 + 3*j];
+			colors[i].blue = Spi0.Data[389 + 3*j];
+		}
+	
+		// Group7 - led [25-23] - Data[98 - 129] - 32 pixels
+		// 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
+		for (i = 3; i < 6; i ++)
+		{
+			if (Sector < 4)				{	j = 0;	}
+			else if (Sector < 7)		{	j = 1;	}
+			else if (Sector < 10)		{	j = 2;	}
+			else if (Sector < 13)		{	j = 3;	}
+			else if (Sector < 16)		{	j = 4;	}
+			else if (Sector < 19)		{	j = 5;	}
+			else if (Sector < 22)		{	j = 6;	}
+			else if (Sector < 25)		{	j = 7;	}
+			else if (Sector < 29)		{	j = 8;	}
+			else if (Sector < 32)		{	j = 9;	}
+			else if (Sector < 35)		{	j = 10;	}
+			else if (Sector < 38)		{	j = 11;	}
+			else if (Sector < 41)		{	j = 12;	}
+			else if (Sector < 44)		{	j = 13;	}
+			else if (Sector < 47)		{	j = 14;	}
+			else if (Sector < 50)		{	j = 15;	}
+			else if (Sector < 54)		{	j = 16;	}
+			else if (Sector < 57)		{	j = 17;	}
+			else if (Sector < 60)		{	j = 18;	}
+			else if (Sector < 63)		{	j = 19;	}
+			else if (Sector < 66)		{	j = 20;	}
+			else if (Sector < 69)		{	j = 21;	}
+			else if (Sector < 72)		{	j = 22;	}
+			else if (Sector < 75)		{	j = 23;	}
+			else if (Sector < 79)		{	j = 24;	}
+			else if (Sector < 82)		{	j = 25;	}
+			else if (Sector < 85)		{	j = 26;	}
+			else if (Sector < 88)		{	j = 27;	}
+			else if (Sector < 91)		{	j = 28;	}
+			else if (Sector < 94)		{	j = 29;	}
+			else if (Sector < 97)		{	j = 30;	}
+			else 						{	j = 31;	}
+			
+			colors[i].red = Spi0.Data[291 + 3*j];
+			colors[i].green = Spi0.Data[292 + 3*j];
+			colors[i].blue = Spi0.Data[293 + 3*j];
+		}
+	
+		// Group6 - led [22-20] - Data[70 - 97] - 28 pixels
+		// 4 - 3 - 4 - 3 - 4 - 3 - 4 - ...
+		for (i = 6; i < 9; i ++)
+		{
+			if (Sector < 4)				{	j = 0;	}
+			else if (Sector < 7)		{	j = 1;	}
+			else if (Sector < 11)		{	j = 2;	}
+			else if (Sector < 14)		{	j = 3;	}
+			else if (Sector < 18)		{	j = 4;	}
+			else if (Sector < 21)		{	j = 5;	}
+			else if (Sector < 25)		{	j = 6;	}
+			else if (Sector < 29)		{	j = 7;	}
+			else if (Sector < 32)		{	j = 8;	}
+			else if (Sector < 36)		{	j = 9;	}
+			else if (Sector < 39)		{	j = 10;	}
+			else if (Sector < 43)		{	j = 11;	}
+			else if (Sector < 46)		{	j = 12;	}
+			else if (Sector < 50)		{	j = 13;	}
+			else if (Sector < 54)		{	j = 14;	}
+			else if (Sector < 57)		{	j = 15;	}
+			else if (Sector < 61)		{	j = 16;	}
+			else if (Sector < 64)		{	j = 17;	}
+			else if (Sector < 68)		{	j = 18;	}
+			else if (Sector < 71)		{	j = 19;	}
+			else if (Sector < 75)		{	j = 20;	}
+			else if (Sector < 79)		{	j = 21;	}
+			else if (Sector < 82)		{	j = 22;	}
+			else if (Sector < 86)		{	j = 23;	}
+			else if (Sector < 89)		{	j = 24;	}
+			else if (Sector < 93)		{	j = 25;	}
+			else if (Sector < 96)		{	j = 26;	}
+			else 						{	j = 27;	}
+			
+			colors[i].red = Spi0.Data[207 + 3*j];
+			colors[i].green = Spi0.Data[208 + 3*j];
+			colors[i].blue = Spi0.Data[209 + 3*j];
+		}
+	
+		// Group5 - led [19-16] - Data[46 - 69] - 24 pixels
+		// 5 - 4 - 4 - 4 - 4 - 4 - ...
+		for (i = 9; i < 13; i ++)
+		{
+			if (Sector < 5)				{	j = 0;	}
+			else if (Sector < 9)		{	j = 1;	}
+			else if (Sector < 13)		{	j = 2;	}
+			else if (Sector < 17)		{	j = 3;	}
+			else if (Sector < 21)		{	j = 4;	}
+			else if (Sector < 25)		{	j = 5;	}
+			else if (Sector < 30)		{	j = 6;	}
+			else if (Sector < 34)		{	j = 7;	}
+			else if (Sector < 38)		{	j = 8;	}
+			else if (Sector < 42)		{	j = 9;	}
+			else if (Sector < 46)		{	j = 10;	}
+			else if (Sector < 50)		{	j = 11;	}
+			else if (Sector < 55)		{	j = 12;	}
+			else if (Sector < 59)		{	j = 13;	}
+			else if (Sector < 63)		{	j = 14;	}
+			else if (Sector < 67)		{	j = 15;	}
+			else if (Sector < 71)		{	j = 16;	}
+			else if (Sector < 75)		{	j = 17;	}
+			else if (Sector < 79)		{	j = 18;	}
+			else if (Sector < 83)		{	j = 19;	}
+			else if (Sector < 87)		{	j = 20;	}
+			else if (Sector < 91)		{	j = 21;	}
+			else if (Sector < 96)		{	j = 22;	}
+			else 						{	j = 23;	}
+			
+			colors[i].red = Spi0.Data[135 + 3*j];
+			colors[i].green = Spi0.Data[136 + 3*j];
+			colors[i].blue = Spi0.Data[137 + 3*j];
+		}
+	
+		// Group4 - led [15-12] - Data[22 - 45] - 24 pixels
+		// 5 - 4 - 4 - 4 - 4 - 4 - ... 
+		for (i = 13; i < 17; i ++)
+		{
+			if (Sector < 5)				{	j = 0;	}
+			else if (Sector < 9)		{	j = 1;	}
+			else if (Sector < 13)		{	j = 2;	}
+			else if (Sector < 17)		{	j = 3;	}
+			else if (Sector < 21)		{	j = 4;	}
+			else if (Sector < 25)		{	j = 5;	}
+			else if (Sector < 30)		{	j = 6;	}
+			else if (Sector < 34)		{	j = 7;	}
+			else if (Sector < 38)		{	j = 8;	}
+			else if (Sector < 42)		{	j = 9;	}
+			else if (Sector < 46)		{	j = 10;	}
+			else if (Sector < 50)		{	j = 11;	}
+			else if (Sector < 55)		{	j = 12;	}
+			else if (Sector < 59)		{	j = 13;	}
+			else if (Sector < 63)		{	j = 14;	}
+			else if (Sector < 67)		{	j = 15;	}
+			else if (Sector < 71)		{	j = 16;	}
+			else if (Sector < 75)		{	j = 17;	}
+			else if (Sector < 79)		{	j = 18;	}
+			else if (Sector < 83)		{	j = 19;	}
+			else if (Sector < 87)		{	j = 20;	}
+			else if (Sector < 91)		{	j = 21;	}
+			else if (Sector < 96)		{	j = 22;	}
+			else 						{	j = 23;	}
+			
+			colors[i].red = Spi0.Data[63 + 3*j];
+			colors[i].green = Spi0.Data[64 + 3*j];
+			colors[i].blue = Spi0.Data[65 + 3*j];
+		}
+	
+		// Group3 - led [11-08] - Data [10 - 21] - 12 pixels
+		// 8 - 9 - 8 - ...
+		for (i = 17; i < 21; i ++)
+		{
+			if (Sector < 8)				{	j = 0;	}
+			else if (Sector < 17)		{	j = 1;	}
+			else if (Sector < 25)		{	j = 2;	}
+			else if (Sector < 33)		{	j = 3;	}
+			else if (Sector < 42)		{	j = 4;	}
+			else if (Sector < 50)		{	j = 5;	}
+			else if (Sector < 58)		{	j = 6;	}
+			else if (Sector < 67)		{	j = 7;	}
+			else if (Sector < 75)		{	j = 8;	}
+			else if (Sector < 83)		{	j = 9;	}
+			else if (Sector < 92)		{	j = 10;	}
+			else 						{	j = 11;	}
+			
+			colors[i].red = Spi0.Data[27 + 3*j];
+			colors[i].green = Spi0.Data[28 + 3*j];
+			colors[i].blue = Spi0.Data[29 + 3*j];
+		}
+	
+		// Group2 - led [07-04] - Data [2 - 9] - 8 pixels
+		// 12 - 13 - 12 - ...
+		for (i = 21; i < 25; i ++)
+		{
+			if (Sector < 12)			{	j = 0;	}
+			else if (Sector < 25)		{	j = 1;	}
+			else if (Sector < 37)		{	j = 2;	}
+			else if (Sector < 50)		{	j = 3;	}
+			else if (Sector < 62)		{	j = 4;	}
+			else if (Sector < 75)		{	j = 5;	}
+			else if (Sector < 87)		{	j = 6;	}
+			else 						{	j = 7;	}
+			
+			colors[i].red = Spi0.Data[3 + 3*j];
+			colors[i].green = Spi0.Data[4 + 3*j];
+			colors[i].blue = Spi0.Data[5 + 3*j];
+		}
+	
+		// Group1 - led [03-01] - Data [1] - 1 pixel
+		for (i = 25; i < 28; i ++)
+		{
+			colors[i].red = Spi0.Data[0];
+			colors[i].green = Spi0.Data[1];
+			colors[i].blue = Spi0.Data[2];
+		}
+	}
+}
+
 void COLOR_Refresh (void)
 {
 	unsigned char    i,j;
@@ -773,9 +1015,11 @@ void LED_Refresh (void)
 
 		//COLOR_Refresh();
 		
-		COLOR_Refresh_Test();
+		//COLOR_Refresh_Test();
 
-		Test_Led();
+		COLOR_Refresh_Test_2();
+		
+		//Test_Led();
 		
 		ledStrip.write(colors, LED_COUNT);
 	}
