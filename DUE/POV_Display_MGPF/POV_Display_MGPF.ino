@@ -155,7 +155,7 @@ void loop()
     }
   }
   */
-  if (    ((Time_us - Refresh_Time) > 1500)
+  /*if (    ((Time_us - Refresh_Time) > 1500)
       &&  (Spi0.Save_Time == false)
       &&  (Spi0.Check_Time_Out == false))
   {
@@ -163,7 +163,7 @@ void loop()
     LED_Refresh();
     SPI_Slave_Stop();
     SPI_Slave_Initialize(SPI_MODE0);
-  }
+  }*/
   SPI_Refresh_Data();
   //LED_Refresh_Test();
   //delayMicroseconds(1500);
@@ -234,6 +234,7 @@ void SPI_Refresh_Data (void)
     Spi0.Save_Time = false;
     Spi0.Check_Time_Out = true;
     Spi0.Last_Time_Rcv = Time_us;
+    Serial.println(Spi0.Counter);
   }
   else if (Spi0.Check_Time_Out == true)
   {
