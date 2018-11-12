@@ -158,7 +158,7 @@ void loop()
     }
   }
   
-  if (    ((Time_us - Refresh_Time) > 2200)
+  if (    ((Time_us - Refresh_Time) > 1000)
       &&  (Spi0.Save_Time == false)
       &&  (Spi0.Check_Time_Out == false))
   {
