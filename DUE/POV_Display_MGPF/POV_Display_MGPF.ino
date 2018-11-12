@@ -242,9 +242,12 @@ void SPI_Refresh_Data (void)
     {
       if (Spi0.Counter == NB_DATAS)
       {
-        
         Serial.println(Spi0.Counter);
         memcpy(Spi0.Data, Spi0.Rcv_Data, NB_DATAS);
+      }
+      else
+      {
+        Serial.println("trame foirée");
       }
       SPI_Slave_Stop();
       SPI_Slave_Initialize(SPI_MODE0);
