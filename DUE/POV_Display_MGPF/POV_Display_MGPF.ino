@@ -150,7 +150,10 @@ void loop()
     }
   }
   */
-  LED_Refresh();
+  if ((Spi0.Save_Time == false) && (Spi0.Check_Time_Out == false))
+  {
+    LED_Refresh();
+  }
   SPI_Refresh_Data();
 }
 

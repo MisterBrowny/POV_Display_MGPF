@@ -115,11 +115,13 @@ class SPI_WS2801 {
   inline __attribute__((always_inline))
   void writeStrip(rgb_color * colors, unsigned int count) {
     int i = 0;
+    __disable_irq();
     while(count --)
     {
       write(&colors[i]);
       i ++;
     }
+    __enable_irq();
   }
 };
 #endif // WS2801_h
