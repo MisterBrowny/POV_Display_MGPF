@@ -89,8 +89,7 @@ ISR (SPI0_Handler)
     // Récupére la data dans le buffer de reception
     Spi0.Data[Spi0.Counter] = REG_SPI0_RDR;
     Spi0.Counter ++;
-    Spi0.Check_Time_Out = true;
-    Spi0.Last_Time_Rcv = Time_us;
+    Spi0.Save_Time = true;
   }
 }
 
@@ -155,7 +154,7 @@ void loop()
       Serial.println("Motor stop");
     }
   }
-  
+  */
   if (    ((Time_us - Refresh_Time) > 1500)
       &&  (Spi0.Save_Time == false)
       &&  (Spi0.Check_Time_Out == false))
@@ -165,9 +164,9 @@ void loop()
     SPI_Slave_Stop();
     SPI_Slave_Initialize(SPI_MODE0);
   }
-  SPI_Refresh_Data();*/
-  LED_Refresh_Test();
-  delayMicroseconds(1500);
+  SPI_Refresh_Data();
+  //LED_Refresh_Test();
+  //delayMicroseconds(1500);
 }
 
 void Motor_Init (void)
@@ -230,13 +229,13 @@ void SPI_Unmask_Interrupts (void)
 
 void SPI_Refresh_Data (void)
 {
- /* if (Spi0.Save_Time == true)
+  if (Spi0.Save_Time == true)
   {
     Spi0.Save_Time = false;
     Spi0.Check_Time_Out = true;
     Spi0.Last_Time_Rcv = Time_us;
   }
-  else */if (Spi0.Check_Time_Out == true)
+  else if (Spi0.Check_Time_Out == true)
   {
     if ((Time_us - Spi0.Last_Time_Rcv) > SPI_TIME_OUT)
     {
