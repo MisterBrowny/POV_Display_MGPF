@@ -54,6 +54,7 @@ typedef struct    StructSpi{
     unsigned int    Counter;
     unsigned long   Last_Time_Rcv;
     byte            Data[NB_DATAS];
+    byte            Rcv_Data[NB_DATAS];
     bool            Check_Time_Out;
     volatile bool   Save_Time;
 }StruSpi;
@@ -87,7 +88,7 @@ ISR (SPI0_Handler)
   {
     int SR = REG_SPI0_SR;
     // Récupére la data dans le buffer de reception
-    Spi0.Data[Spi0.Counter] = REG_SPI0_RDR;
+    Spi0.Rcv_Data[Spi0.Counter] = REG_SPI0_RDR;
     Spi0.Counter ++;
     Spi0.Save_Time = true;
   }
@@ -239,9 +240,12 @@ void SPI_Refresh_Data (void)
   {
     if ((Time_us - Spi0.Last_Time_Rcv) > SPI_TIME_OUT)
     {
-      Serial.println(Spi0.Counter);
       SPI_Slave_Stop();
-      //SPI_Print_Data(Spi0.Counter);
+      if (Spi0.Counter == NB_DATAS)
+      {
+        Serial.println(Spi0.Counter);
+        memcpy(Spi0.Data, Spi0.Rcv_Data, NB_DATAS);
+      }
       SPI_Slave_Initialize(SPI_MODE0);
     }
   }
