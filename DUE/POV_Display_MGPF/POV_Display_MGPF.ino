@@ -149,12 +149,9 @@ void loop()
       Serial.println("Motor stop");
     }
   }
-  
+  */
   LED_Refresh();
-  SPI_Refresh_Data();*/
-  
-  LED_Refresh_Test();
-  delayMicroseconds(800);
+  SPI_Refresh_Data();
 }
 
 void Motor_Init (void)
@@ -257,12 +254,12 @@ void LED_Refresh (void)
 {
   Sector = Step / 2;
 
-  if (Sector != MemoSector)
+  //if (Sector != MemoSector)
   {
     MemoSector = Sector;
 
-    COLOR_Refresh_Test();
-
+    //COLOR_Refresh_Test();
+    COLOR_Refresh();
     WS2801.writeStrip(colors, LED_COUNT);
   }
 }
@@ -293,7 +290,7 @@ void COLOR_Refresh(void)
 {
   unsigned char    i,j;
   rgb_color        color;
-  if (Sector <= 4)
+  /*if (Sector <= 4)
   {
     color.red = 255;
     color.green = 255;
@@ -304,7 +301,7 @@ void COLOR_Refresh(void)
       colors[i] = color;
     }
   }
-  else
+  else*/
   {
     // Group8 - led [0] - Data[130 - 161] - 32 pixels
     // 4 - 3 - 3 - 3 - 3 - 3 - 3 - 3 - ...
