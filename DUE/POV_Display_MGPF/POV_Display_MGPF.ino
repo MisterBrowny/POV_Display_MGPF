@@ -153,11 +153,12 @@ void loop()
   if ((Spi0.Save_Time == false) && (Spi0.Check_Time_Out == false))
   {
     SPI_Slave_Stop();
-    LED_Refresh();
+    //LED_Refresh();
+    LED_Refresh_Test();
     SPI_Slave_Initialize(SPI_MODE0);
   }
   SPI_Refresh_Data();
-  delayMicroseconds(500);
+  delayMicroseconds(1500);
 }
 
 void Motor_Init (void)
@@ -291,7 +292,9 @@ void Test_Led (void)
 
   for(i = 0; i < LED_COUNT; i++)
   {
-    colors[i] = color;
+    colors[i].red = Spi0.Data[387+i];
+    colors[i].green = Spi0.Data[388+i];
+    colors[i].blue = Spi0.Data[389+i];
   }
 }
 
