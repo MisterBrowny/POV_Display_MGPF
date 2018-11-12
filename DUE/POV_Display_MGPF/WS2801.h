@@ -70,6 +70,12 @@ class SPI_WS2801 {
     asm volatile ("nop\n");
     asm volatile ("nop\n");
     asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
     fastDigitalWrite(SckPin, LOW);
   }
   //----------------------------------------------------------------------------
@@ -94,9 +100,11 @@ class SPI_WS2801 {
   */
   inline __attribute__((always_inline))
   void write(rgb_color * color) {
+    __disable_irq();
     send(color->red);
     send(color->green);
     send(color->blue);
+    __enable_irq();
   }
 
   //----------------------------------------------------------------------------
