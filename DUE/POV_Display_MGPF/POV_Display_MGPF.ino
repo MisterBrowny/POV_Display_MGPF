@@ -239,8 +239,8 @@ void SPI_Refresh_Data (void)
   {
     if ((Time_us - Spi0.Last_Time_Rcv) > SPI_TIME_OUT)
     {
-      SPI_Slave_Stop();
       Serial.println(Spi0.Counter);
+      SPI_Slave_Stop();
       //SPI_Print_Data(Spi0.Counter);
       SPI_Slave_Initialize(SPI_MODE0);
     }
