@@ -159,6 +159,7 @@ void loop()
   }
   SPI_Refresh_Data(); */
   LED_Refresh_Test();
+  delayMicroseconds(1500);
 }
 
 void Motor_Init (void)
