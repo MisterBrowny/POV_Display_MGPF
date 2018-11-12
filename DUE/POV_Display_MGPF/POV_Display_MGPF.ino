@@ -163,8 +163,8 @@ void loop()
   {
     Refresh_Time = Time_us;
     LED_Refresh();
-    SPI_Slave_Stop();
-    SPI_Slave_Initialize(SPI_MODE0);
+    //SPI_Slave_Stop();
+    //SPI_Slave_Initialize(SPI_MODE0);
   }
   SPI_Refresh_Data();
   //LED_Refresh_Test();
@@ -263,8 +263,8 @@ void SPI_Refresh_Data (void)
         Trame_bonne = 0;
       }
       
-      SPI_Slave_Stop();
-      SPI_Slave_Initialize(SPI_MODE0);
+      //SPI_Slave_Stop();
+      //SPI_Slave_Initialize(SPI_MODE0);
     }
   }
 }
