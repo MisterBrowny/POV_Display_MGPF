@@ -100,11 +100,11 @@ class SPI_WS2801 {
   */
   inline __attribute__((always_inline))
   void write(rgb_color * color) {
-    __disable_irq();
+    //__disable_irq();
     send(color->red);
     send(color->blue);
     send(color->green);
-    __enable_irq();
+    //__enable_irq();
   }
 
   //----------------------------------------------------------------------------
