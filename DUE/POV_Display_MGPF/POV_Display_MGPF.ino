@@ -263,8 +263,8 @@ void SPI_Refresh_Data (void)
         Trame_bonne = 0;
       }
       
-      //SPI_Slave_Stop();
-      //SPI_Slave_Initialize(SPI_MODE0);
+      SPI_Slave_Stop();
+      SPI_Slave_Initialize(SPI_MODE0);
     }
   }
 }
