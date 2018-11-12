@@ -292,9 +292,9 @@ void Test_Led (void)
 
   for(i = 0; i < LED_COUNT; i++)
   {
-    colors[i].red = Spi0.Data[387+i];
-    colors[i].green = Spi0.Data[388+i];
-    colors[i].blue = Spi0.Data[389+i];
+    colors[i].red = Spi0.Data[207+3*i];
+    colors[i].green = Spi0.Data[208+3*i];
+    colors[i].blue = Spi0.Data[209+3*i];
   }
 }
 
