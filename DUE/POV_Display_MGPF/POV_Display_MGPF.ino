@@ -240,12 +240,13 @@ void SPI_Refresh_Data (void)
   {
     if ((Time_us - Spi0.Last_Time_Rcv) > SPI_TIME_OUT)
     {
-      SPI_Slave_Stop();
       if (Spi0.Counter == NB_DATAS)
       {
+        
         Serial.println(Spi0.Counter);
         memcpy(Spi0.Data, Spi0.Rcv_Data, NB_DATAS);
       }
+      SPI_Slave_Stop();
       SPI_Slave_Initialize(SPI_MODE0);
     }
   }
