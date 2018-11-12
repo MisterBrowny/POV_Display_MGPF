@@ -149,7 +149,7 @@ void loop()
       Serial.println("Motor stop");
     }
   }
-  */
+  
   if ((Spi0.Save_Time == false) && (Spi0.Check_Time_Out == false))
   {
     SPI_Slave_Stop();
@@ -157,7 +157,8 @@ void loop()
     SPI_Slave_Initialize(SPI_MODE0);
     delayMicroseconds(1500);
   }
-  SPI_Refresh_Data(); 
+  SPI_Refresh_Data(); */
+  LED_Refresh_Test();
 }
 
 void Motor_Init (void)
@@ -233,6 +234,7 @@ void SPI_Refresh_Data (void)
     {
       SPI_Slave_Stop();
       Spi0.Check_Time_Out = false;
+      Spi0.Save_Time = false;
       //SPI_Print_Data(Spi0.Counter);
       Spi0.Counter = 0;
       SPI_Slave_Initialize(SPI_MODE0);
@@ -291,9 +293,7 @@ void Test_Led (void)
 
   for(i = 0; i < LED_COUNT; i++)
   {
-    colors[i].red = Spi0.Data[207+3*i];
-    colors[i].green = Spi0.Data[208+3*i];
-    colors[i].blue = Spi0.Data[209+3*i];
+    colors[i] = color;
   }
 }
 
