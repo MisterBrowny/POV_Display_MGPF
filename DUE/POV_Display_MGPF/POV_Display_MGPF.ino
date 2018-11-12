@@ -48,7 +48,7 @@ bool          Motor_Is_Running = false;
 #define NB_LED_DISPLAY      161
 #define NB_BYTE_PAR_LED     3
 #define NB_DATAS            (unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
-#define SPI_TIME_OUT        50    // µs
+#define SPI_TIME_OUT        20    // µs
 
 typedef struct    StructSpi{
     unsigned int    Counter;
@@ -155,7 +155,7 @@ void loop()
     }
   }
   */
-  /*if (    ((Time_us - Refresh_Time) > 1500)
+  if (    ((Time_us - Refresh_Time) > 1500)
       &&  (Spi0.Save_Time == false)
       &&  (Spi0.Check_Time_Out == false))
   {
@@ -163,7 +163,7 @@ void loop()
     LED_Refresh();
     SPI_Slave_Stop();
     SPI_Slave_Initialize(SPI_MODE0);
-  }*/
+  }
   SPI_Refresh_Data();
   //LED_Refresh_Test();
   //delayMicroseconds(1500);
