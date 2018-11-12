@@ -29,7 +29,7 @@ int Trame_bonne, Trame_mauvaise, Max_Trame_mauvaise;
 #define SDA_PIN     9
 SPI_WS2801<SDA_PIN, SCK_PIN> WS2801;
 
-#define LED_COUNT   15
+#define LED_COUNT   16
 rgb_color           colors[LED_COUNT];
 
 unsigned long   Refresh_Time;
@@ -766,6 +766,10 @@ void COLOR_Refresh(void)
     colors[14].red = Spi0.Data[387 + 3*j];
     colors[14].green = Spi0.Data[388 + 3*j];
     colors[14].blue = Spi0.Data[389 + 3*j];
+
+    colors[15].red = 0;
+    colors[15].green = 0;
+    colors[15].blue = 0;
   }
 }
 
