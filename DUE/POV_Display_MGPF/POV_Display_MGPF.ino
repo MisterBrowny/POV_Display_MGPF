@@ -22,6 +22,7 @@ void    COLOR_Refresh_Test(void);
 
 // Déclarations
 unsigned long Time_us;
+int Trame_bonne, Trame_mauvaise;
 
 // LED
 #define SCK_PIN     7
@@ -242,13 +243,22 @@ void SPI_Refresh_Data (void)
     {
       if (Spi0.Counter == NB_DATAS)
       {
-        Serial.println(Spi0.Counter);
+        //Serial.println(Spi0.Counter);
         memcpy(Spi0.Data, Spi0.Rcv_Data, NB_DATAS);
+        Trame_bonne ++;
       }
       else
       {
-        Serial.println("trame foirée");
+        //Serial.println("trame foirée");
+        Trame_mauvaise ++;
       }
+      if ((Trame_mauvaise + Trame_bonne) == 100)
+      {
+        Serial.println(Trame_mauvaise);
+        Trame_mauvaise = 0;
+        Trame_bonne = 0;
+      }
+      
       SPI_Slave_Stop();
       SPI_Slave_Initialize(SPI_MODE0);
     }
