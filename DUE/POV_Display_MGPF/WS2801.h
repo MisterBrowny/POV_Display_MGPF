@@ -66,13 +66,13 @@ class SPI_WS2801 {
     fastDigitalWrite(SckPin, HIGH);
     asm volatile ("nop\n");
     asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
+    asm volatile ("nop\n");
     /*asm volatile ("nop\n");
-    asm volatile ("nop\n");
-    asm volatile ("nop\n");
-    asm volatile ("nop\n");
-    asm volatile ("nop\n");
-    asm volatile ("nop\n");
-    asm volatile ("nop\n");
     asm volatile ("nop\n");
     asm volatile ("nop\n");
     asm volatile ("nop\n");*/
