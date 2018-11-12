@@ -122,7 +122,8 @@ void setup()
 void loop()
 {
   Time_us = micros();
-  /*if (Button_Moteur_On.read() == Button::PRESSED)
+  
+  if (Button_Moteur_On.read() == Button::PRESSED)
   {
     if (Motor_Is_Running == false)
     {
@@ -156,7 +157,7 @@ void loop()
       Serial.println("Motor stop");
     }
   }
-  */
+  
   if (    ((Time_us - Refresh_Time) > 2200)
       &&  (Spi0.Save_Time == false)
       &&  (Spi0.Check_Time_Out == false))
