@@ -153,8 +153,7 @@ void loop()
   if ((Spi0.Save_Time == false) && (Spi0.Check_Time_Out == false))
   {
     SPI_Slave_Stop();
-    //LED_Refresh();
-    LED_Refresh_Test();
+    LED_Refresh();
     SPI_Slave_Initialize(SPI_MODE0);
   }
   SPI_Refresh_Data();
