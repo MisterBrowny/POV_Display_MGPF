@@ -21,6 +21,8 @@ void    COLOR_Refresh (void);
 void    COLOR_Refresh_Test(void);
 
 // Déclarations
+unsigned long Time_us;
+
 // LED
 #define SCK_PIN     7
 #define SDA_PIN     9
@@ -28,6 +30,8 @@ SPI_WS2801<SDA_PIN, SCK_PIN> WS2801;
 
 #define LED_COUNT   15
 rgb_color           colors[LED_COUNT];
+
+unsigned long   Refresh_Time;
 
 // STEPPER
 #define STEPPER_MAX_SPEED   1700        // steps / seconds
@@ -44,7 +48,7 @@ bool          Motor_Is_Running = false;
 #define NB_LED_DISPLAY      161
 #define NB_BYTE_PAR_LED     3
 #define NB_DATAS            (unsigned int) (NB_LED_DISPLAY * NB_BYTE_PAR_LED)
-#define SPI_TIME_OUT        2000    // µs
+#define SPI_TIME_OUT        50    // µs
 
 typedef struct    StructSpi{
     unsigned int    Counter;
@@ -115,6 +119,7 @@ void setup()
 
 void loop()
 {
+  Time_us = micros();
   /*if (Button_Moteur_On.read() == Button::PRESSED)
   {
     if (Motor_Is_Running == false)
@@ -150,12 +155,14 @@ void loop()
     }
   }
   */
-  if ((Spi0.Save_Time == false) && (Spi0.Check_Time_Out == false))
+  if (    ((Time_us - Refresh_Time) > 1500)
+      &&  (Spi0.Save_Time == false)
+      &&  (Spi0.Check_Time_Out == false))
   {
-    SPI_Slave_Stop();
+    Refresh_Time = Time_us;
     LED_Refresh();
+    SPI_Slave_Stop();
     SPI_Slave_Initialize(SPI_MODE0);
-    delayMicroseconds(1500);
   }
   SPI_Refresh_Data();
   //LED_Refresh_Test();
@@ -226,18 +233,15 @@ void SPI_Refresh_Data (void)
   {
     Spi0.Save_Time = false;
     Spi0.Check_Time_Out = true;
-    Spi0.Last_Time_Rcv = micros();
+    Spi0.Last_Time_Rcv = Time_us;
   }
-
-  if (Spi0.Check_Time_Out == true)
+  else if (Spi0.Check_Time_Out == true)
   {
-    if ((micros() - Spi0.Last_Time_Rcv) > SPI_TIME_OUT)
+    if ((Time_us - Spi0.Last_Time_Rcv) > SPI_TIME_OUT)
     {
       SPI_Slave_Stop();
-      Spi0.Check_Time_Out = false;
-      Spi0.Save_Time = false;
+      Serial.println(Spi0.Counter);
       //SPI_Print_Data(Spi0.Counter);
-      Spi0.Counter = 0;
       SPI_Slave_Initialize(SPI_MODE0);
     }
   }
