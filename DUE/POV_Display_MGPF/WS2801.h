@@ -66,6 +66,7 @@ class SPI_WS2801 {
     fastDigitalWrite(SckPin, HIGH);
     asm volatile ("nop\n");
     asm volatile ("nop\n");
+    /*asm volatile ("nop\n");
     asm volatile ("nop\n");
     asm volatile ("nop\n");
     asm volatile ("nop\n");
@@ -74,8 +75,7 @@ class SPI_WS2801 {
     asm volatile ("nop\n");
     asm volatile ("nop\n");
     asm volatile ("nop\n");
-    asm volatile ("nop\n");
-    asm volatile ("nop\n");
+    asm volatile ("nop\n");*/
     fastDigitalWrite(SckPin, LOW);
   }
   //----------------------------------------------------------------------------
@@ -121,6 +121,8 @@ class SPI_WS2801 {
       write(&colors[i]);
       i ++;
     }
+    fastDigitalWrite(SdaPin, LOW);
+    fastDigitalWrite(SckPin, LOW);
     //__enable_irq();
   }
 };
