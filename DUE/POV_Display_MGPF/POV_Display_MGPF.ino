@@ -155,9 +155,9 @@ void loop()
     SPI_Slave_Stop();
     LED_Refresh();
     SPI_Slave_Initialize(SPI_MODE0);
-    
   }
   SPI_Refresh_Data();
+  delayMicroseconds(500);
 }
 
 void Motor_Init (void)
@@ -201,6 +201,9 @@ void SPI_Slave_Stop (void)
   NVIC_DisableIRQ(SPI0_IRQn);
   NVIC_ClearPendingIRQ(SPI0_IRQn);
   REG_SPI0_CR = SPI_CR_SWRST;     // reset SPI
+  Spi0.Save_Time = false;
+  Spi0.Check_Time_Out = false;
+  Spi0.Counter = 0;
 }
 
 void SPI_Mask_Interrupts (void)
