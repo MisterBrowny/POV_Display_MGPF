@@ -155,8 +155,8 @@ void loop()
       Serial.println("Motor stop");
     }
   }
-  */
-  /*if (    ((Time_us - Refresh_Time) > 1500)
+  
+  if (    ((Time_us - Refresh_Time) > 1500)
       &&  (Spi0.Save_Time == false)
       &&  (Spi0.Check_Time_Out == false))
   {
@@ -164,10 +164,10 @@ void loop()
     LED_Refresh();
     SPI_Slave_Stop();
     SPI_Slave_Initialize(SPI_MODE0);
-  }*/
-  SPI_Refresh_Data();
-  //LED_Refresh_Test();
-  //delayMicroseconds(1500);
+  }
+  SPI_Refresh_Data();*/
+  LED_Refresh_Test();
+  delayMicroseconds(1500);
 }
 
 void Motor_Init (void)
