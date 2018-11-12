@@ -22,7 +22,7 @@ void    COLOR_Refresh_Test(void);
 
 // Déclarations
 unsigned long Time_us;
-int Trame_bonne, Trame_mauvaise;
+int Trame_bonne, Trame_mauvaise, Max_Trame_mauvaise;
 
 // LED
 #define SCK_PIN     7
@@ -254,7 +254,11 @@ void SPI_Refresh_Data (void)
       }
       if ((Trame_mauvaise + Trame_bonne) == 100)
       {
+        Serial.print("% Actuel:");
         Serial.println(Trame_mauvaise);
+        Max_Trame_mauvaise = max(Trame_mauvaise,Max_Trame_mauvaise);
+        Serial.print("% Max:");
+        Serial.println(Max_Trame_mauvaise);
         Trame_mauvaise = 0;
         Trame_bonne = 0;
       }
