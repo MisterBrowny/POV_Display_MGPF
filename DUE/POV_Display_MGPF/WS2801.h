@@ -102,8 +102,8 @@ class SPI_WS2801 {
   void write(rgb_color * color) {
     __disable_irq();
     send(color->red);
-    send(color->green);
     send(color->blue);
+    send(color->green);
     __enable_irq();
   }
 
