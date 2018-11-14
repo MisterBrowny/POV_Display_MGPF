@@ -76,6 +76,8 @@ byte  Step, Sector, MemoSector;
 void Capteur_Interrupt(void)
 {
     Step = 0;
+    Serial.print(micros());
+    Serial.println(": capt'");
 }
 
 ISR (SPI0_Handler)
@@ -143,7 +145,12 @@ void loop()
     }
     else
     {
-      if (Motor.runSpeed() == true)    {    Step ++;    }
+      if (Motor.runSpeed() == true)    
+      {
+        Serial.println(micros());    
+        Serial.println(": Step");
+        Step ++;
+      }
     }
   }
   else if (Button_Moteur_On.read() == Button::RELEASED)
@@ -162,14 +169,11 @@ void loop()
       &&  (Spi0.Save_Time == false)
       &&  (Spi0.Check_Time_Out == false))
   {
+    
     Refresh_Time = Time_us;
     LED_Refresh();
-    //SPI_Slave_Stop();
-    //SPI_Slave_Initialize(SPI_MODE0);
   }
   SPI_Refresh_Data();
-  //LED_Refresh_Test();
-  //delayMicroseconds(1500);
 }
 
 void Motor_Init (void)
@@ -244,26 +248,16 @@ void SPI_Refresh_Data (void)
     {
       if (Spi0.Counter == NB_DATAS)
       {
-        //Serial.println(Spi0.Counter);
         memcpy(Spi0.Data, Spi0.Rcv_Data, NB_DATAS);
+        //SPI_Print_Data();
         Trame_bonne ++;
       }
       else
       {
-        //Serial.println("trame foirée");
         Trame_mauvaise ++;
       }
-      if ((Trame_mauvaise + Trame_bonne) == 100)
-      {
-        Serial.print("% Actuel:");
-        Serial.println(Trame_mauvaise);
-        Max_Trame_mauvaise = max(Trame_mauvaise,Max_Trame_mauvaise);
-        Serial.print("% Max:");
-        Serial.println(Max_Trame_mauvaise);
-        Trame_mauvaise = 0;
-        Trame_bonne = 0;
-      }
-      
+
+      //SPI_Print_Error();
       SPI_Slave_Stop();
       SPI_Slave_Initialize(SPI_MODE0);
     }
@@ -289,16 +283,30 @@ void SPI_Print_Data (int nb_data)
   Serial.println();
 }
 
+void SPI_Print_Error (int nb_data)
+{
+  if ((Trame_mauvaise + Trame_bonne) == 100)
+  {
+    Serial.print("% Actuel:");
+    Serial.println(Trame_mauvaise);
+    Max_Trame_mauvaise = max(Trame_mauvaise,Max_Trame_mauvaise);
+    Serial.print("% Max:");
+    Serial.println(Max_Trame_mauvaise);
+    Trame_mauvaise = 0;
+    Trame_bonne = 0;
+  }
+}
+
 void LED_Refresh (void)
 {
   Sector = Step / 2;
 
-  //if (Sector != MemoSector)
+  if (Sector != MemoSector)
   {
     MemoSector = Sector;
 
-    //COLOR_Refresh_Test();
     COLOR_Refresh();
+    
     WS2801.writeStrip(colors, LED_COUNT);
   }
 }
