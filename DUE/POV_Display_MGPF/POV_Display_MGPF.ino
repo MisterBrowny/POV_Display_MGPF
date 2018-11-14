@@ -69,15 +69,15 @@ Button  Button_Moteur_On(BUTTON_INPUT);
 // DIVERS
 #define INPUT_CAPTEUR   8
 #define SECTOR_NB_MAX   100
-byte  Step, Sector, MemoSector;
+int Step, Sector, MemoSector;
 
 
 // Définition des interruptions
 void Capteur_Interrupt(void)
 {
     Step = 0;
-    //Serial.print(micros());
-    //Serial.println(": capt'");
+    Serial.print(micros());
+    Serial.println(": capt'");
 }
 
 ISR (SPI0_Handler)
@@ -169,10 +169,6 @@ void loop()
       &&  (Spi0.Save_Time == false)
       &&  (Spi0.Check_Time_Out == false))
   {
-    Serial.print(micros());
-    Serial.print(" : ");
-    Serial.println(Step);
-    
     Refresh_Time = Time_us;
     LED_Refresh();
   }
