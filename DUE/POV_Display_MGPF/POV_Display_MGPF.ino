@@ -165,11 +165,11 @@ void loop()
     }
   }
   
-  if (    ((Time_us - Refresh_Time) > 1000)
-      &&  (Spi0.Save_Time == false)
+  if (    /*((Time_us - Refresh_Time) > 1000)
+      &&  */(Spi0.Save_Time == false)
       &&  (Spi0.Check_Time_Out == false))
   {
-    Refresh_Time = Time_us;
+    //Refresh_Time = Time_us;
     LED_Refresh();
   }
   SPI_Refresh_Data();
