@@ -76,8 +76,8 @@ int Step, Sector, MemoSector;
 void Capteur_Interrupt(void)
 {
     Step = 0;
-    Serial.print(micros());
-    Serial.println(": capt'");
+    //Serial.print(micros());
+    //Serial.println(": capt'");
 }
 
 ISR (SPI0_Handler)
